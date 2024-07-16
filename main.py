@@ -38,13 +38,13 @@ def create_app():
     app.register_blueprint(auth_bp)
 # for staff?
 
-    from controllers.entered_by_controller import entered_by_bp
-    app.register_blueprint(entered_by_bp)
+    from controllers.enteredby_controller import enteredby_bp
+    app.register_blueprint(enteredby_bp)
 
     from controllers.item_controller import item_bp
     app.register_blueprint(item_bp)
 
-    from controllers.collected_by_controller import collected_by_bp
-    app.register_blueprint(collected_by_bp)
+    from controllers.collected_by_controller import collectedby_bp
+    app.register_blueprint(collectedby_bp)
 
     return app
