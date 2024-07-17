@@ -1,41 +1,58 @@
 from init import db, ma
 from marshmallow import fields
-from marshmallow.validate import Regexp
+from marshmallow.validate import Length, And, Regexp
 #from marshmallow.validate import Length, And, Regexp?
 
 class Staff(db.Model):
-    # name of the table
-    __tablename__ = "staff"
+    # Name of the table. I know staffs isn't correct grammar, but to simplify and not confuse terminology/references too much
+    __tablename__ = "staffs"
 
     # attributes of the table
-    id = db.Column(db.Integer, primary_key=True)
+    staff_id = db.Column(db.Integer, primary_key=True)
     organisation_name = db.Column(db.String, nullable=False)
     staff_email = db.Column(db.String, nullable=False, unique=True)
     staff_password = db.Column(db.String, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
     
     #is_admin = db.Column(db.Boolean, default=False)
-    enteredby = db.relationship("EnteredBy", back_populates="staff")
+    items = db.relationship("Item", back_populates="staff")
+    #plural or single? item = db.relationship("Item", back_populates="staff")
+    #enteredby = db.relationship("EnteredBy", back_populates="staff")
     #forward or back?
 
 
 class StaffSchema(ma.Schema):
- #   cards = fields.List(fields.Nested('CardSchema', exclude=["staff"]))
-  #  comments = fields.List(fields.Nested('CommentSchema', exclude=["staff"]))
-    
-  #  organisation_name =
+    items = fields.Nested('ItemSchema', only=["item_id", "item_name"])
+   
+    organisation_name = fields.String(required=True, validate=And(
+            Length(min=2,
+                   error="Organisation name must have a length of at least 2 characters"),
+            Regexp("^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$",
+                   error="Organisation name cannot contain commas, colons, semicolons, and brackets"),
+        ),
+    )
     staff_email = fields.String(required=True, validate=Regexp("^\S+@\S+\.\S+$", error="Invalid Email Format"))
 
-    staff_password = fields.String(required=True, validate=Regexp("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$", error="Minimum eight characters, at least one letter and one number"))
-
-    #user_library = fields.List(fields.Nested("User_Library_Schema", only=["user_library_id"]))
+    staff_password  = fields.String(
+            required=True,
+            validate=And(
+            Length(
+                min=6, error="Password must be at least 6 characters long."
+            ),
+            Regexp(
+                "^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$",
+                error="Password must include at least one letter, one number, and one special character.",
+            ),
+        ),
+    #       load_only=True,
+    )
 
     class Meta:
         fields = ("id", "organisation_name", "staff_email", "staff_password", "is_admin")
 
 
 # to handle a single staff object
-staff_schema = StaffSchema(exclude=["password"])
+staff_schema = StaffSchema(exclude=["staff_password"])
 
 # to handle a list of staff objects
-staffs_schema = StaffSchema(many=True, exclude=["password"])
+staffs_schema = StaffSchema(many=True, exclude=["staff_password"])

@@ -48,7 +48,7 @@ def register_staff():
 def login_staff():
 
     # Get the data from the request body
-    body_data = user_schema.load(request.get_json())
+    body_data = staff_schema.load(request.get_json())
 
     # Find user with the email address
     # SELECT * FROM users WHERE email = 'user_email_here';
@@ -134,7 +134,7 @@ def update_staff():
     staff_password = body_data.get("staff_password")
     # add staff_email ?
     # fetch the staff member from the db
-    stmt = db.select(Staff).filter_by(id=get_jwt_identity())
+    stmt = db.select(Staff).filter_by(staff_id=get_jwt_identity())
     staff = db.session.scalar(stmt)
     # if staff member exists
     if staff:

@@ -44,7 +44,7 @@ def create_app():
     from controllers.item_controller import item_bp
     app.register_blueprint(item_bp)
 
-    from controllers.collected_by_controller import collectedby_bp
-    app.register_blueprint(collectedby_bp)
+    from controllers.claimedby_controller import claimedby_bp
+    app.register_blueprint(claimedby_bp)
 
     return app
