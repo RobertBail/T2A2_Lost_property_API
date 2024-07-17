@@ -17,6 +17,7 @@ class ClaimedBy(db.Model):
     #item_id = db.Column(db.Integer, db.ForeignKey("items.id"))
 
     items = db.relationship("Item", back_populates="claimedbys")
+    #item = db.relationship("Item", back_populates="claimedbys")
    
 class ClaimedBySchema(ma.Schema):
    
@@ -36,9 +37,6 @@ class ClaimedBySchema(ma.Schema):
             ),
         ),
     )
-#need required=True here?
-   email = fields.String(required=True, validate=Regexp("^\S+@\S+\.\S+$", error="Invalid Email Format"))
-
    phone = fields.Integer(
         required=True,
         validate=Range(
@@ -47,7 +45,10 @@ class ClaimedBySchema(ma.Schema):
             error="Phone number must be minimum 6 and maximum 10 numbers",
         ),
     )
-   
+       
+#need required=True here?
+   email = fields.String(required=True, validate=Regexp("^\S+@\S+\.\S+$", error="Invalid Email Format"))
+
    #address also?
 
    class Meta:

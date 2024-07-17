@@ -16,7 +16,7 @@ class EnteredBy(db.Model):
 class EnteredBySchema(ma.Schema):
 
     #or staff
-    staffs = fields.Nested('EnteredBySchema', only=["staff_id", "organisation_name", "staff_email"])
+    staffs = fields.Nested('StaffSchema', only=["staff_id", "organisation_name", "staff_email"])
 
     StaffName = fields.String(required=True, validate=And(
         Length(min=2, error="Staff Name must be at least 2 characters long"),

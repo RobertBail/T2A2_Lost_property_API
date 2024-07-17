@@ -48,7 +48,7 @@ class StaffSchema(ma.Schema):
     )
 
     class Meta:
-        fields = ("id", "organisation_name", "staff_email", "staff_password", "is_admin")
+        fields = ("staff_id", "organisation_name", "staff_email", "staff_password", "is_admin")
 
 
 # to handle a single staff object

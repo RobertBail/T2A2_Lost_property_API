@@ -34,7 +34,7 @@ class ItemSchema(ma.Schema):
     enteredbys = fields.Nested('EnteredBySchema', only=["StaffName"])
     #enteredbys = fields.Nested('EnteredBySchema')  for all fields in enteredbys?
     #enteredby = fields.Nested('EnteredBySchema', only=["StaffName"])
-    staffs = fields.Nested('EnteredBySchema', only=["staff_id", "organisation_name", "staff_email"])
+    staffs = fields.Nested('StaffSchema', only=["staff_id", "organisation_name", "staff_email"])
     #staff = fields.Nested('EnteredBySchema', only=["staff_id", "organisation_name", "staff_email"])
     #for claimedby  also?
 
