@@ -47,8 +47,8 @@ class ItemSchema(ma.Schema):
                 error="Item name must have a length of at least 2 characters",
             ),
             Regexp(
-                "^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$",
-                error="Item name cannot contain commas, colons, semicolons, and brackets",
+                "^[a-zA-Z0-9\s\-_&.'()! ]+$",
+                error="Item name cannot contain special characters such as @, #, $, %, *, /, question marks, colons, semicolons, and brackets",
             ),
         ),
     )
@@ -61,8 +61,8 @@ class ItemSchema(ma.Schema):
                 error="Description must have a length of at least 2 characters",
             ),
             Regexp(
-                "^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$",
-                error="Description cannot contain commas, colons, semicolons, and brackets",
+                "^[a-zA-Z0-9\s\-_&.'()! ]+$",
+                error="Description cannot contain special characters such as @, #, $, %, *, /, question marks, colons, semicolons, and brackets",
             ),
         ),
     )

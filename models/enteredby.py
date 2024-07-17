@@ -20,8 +20,9 @@ class EnteredBySchema(ma.Schema):
 
     StaffName = fields.String(required=True, validate=And(
         Length(min=2, error="Staff Name must be at least 2 characters long"),
-        Regexp('^[A-Za-z0-9 ]+$', error="Staff Name must have alphanumerics characters only")
+        Regexp("^[a-zA-Z0-9\s\-_.'()! ]+$", error="Staff Name cannot contain special characters such as @, &, #, $, %, *, /, question marks, colons, semicolons, and brackets")
     ))
+    # StaffName can have hyphen ‐  ?
     #this for "role" also?
 
     class Meta:

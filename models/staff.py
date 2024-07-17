@@ -27,8 +27,8 @@ class StaffSchema(ma.Schema):
     organisation_name = fields.String(required=True, validate=And(
             Length(min=2,
                    error="Organisation name must have a length of at least 2 characters"),
-            Regexp("^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$",
-                   error="Organisation name cannot contain commas, colons, semicolons, and brackets"),
+            Regexp("^[a-zA-Z0-9\s\-_.'()! ]+$",
+                   error="Organisation name cannot contain special characters such as @, &, #, $, %, *, /, question marks, colons, semicolons, and brackets"),
         ),
     )
     staff_email = fields.String(required=True, validate=Regexp("^\S+@\S+\.\S+$", error="Invalid Email Format"))
