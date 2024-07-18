@@ -2,3 +2,4 @@
 __pycache__
 venv
 .env
+#for some reason git won't ignore venv or .venv, if I name it .venv and it greys out, the imports don't resolve again
