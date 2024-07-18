@@ -16,7 +16,7 @@ item_bp = Blueprint("items", __name__, url_prefix="/items")
 @item_bp.route("/") 
 
 def get_all_items():
-    # fetch all cards and order them according to date in descending order
+#add desc() ?   
     stmt = db.select(Item).order_by(Item.item_name)
     items = db.session.scalars(stmt)
     return items_schema.dump(items)
@@ -45,8 +45,8 @@ def new_item():
         time_found=body_data.get("time_found"),
         location_found=body_data.get("location_found"),
         now_claimed=body_data.get("now_claimed"), 
-        #staff_id=get_jwt_identity()
-        #enteredby_id=get_jwt_identity()
+        staff_id=get_jwt_identity(),
+        enteredby_id=get_jwt_identity()
     )
     # add and commit to DB
     db.session.add(item)
@@ -59,11 +59,15 @@ def new_item():
 @authorise_as_admin  # is_admin = True
 def delete_item(item_id):
 
-    stmt = db.select(Item).where(Item.item_id == item_id)
+    stmt = db.select(Item).filter_by(item_id=item_id)
     item = db.session.scalar(stmt)
 
     # If item record exists, delete the item from the session and commit
     if item:
+#       is_admin = authorise_as_admin()
+#        if not is_admin and str(item.staff_id) != get_jwt_identity():
+        if str(item.staff_id) != get_jwt_identity():
+            return {"error": "Staff member is not authorised to perform this deletion."}, 403
         db.session.delete(item)
         db.session.commit()
         return {
@@ -87,6 +91,9 @@ def update_item(item_id):
 
     # If item record exists, update the specified fields
     if item:
+        if str(item.staff_id) != get_jwt_identity():
+            return {"error": "Only authorised staff members can edit item details"}, 403
+        #or enteredby_id?
         item.item_name = body_data.get("item_name") or item.item_name
         item.description = body_data.get("description") or item.description
         item.quantity = body_data.get("quantity") or item.quantity

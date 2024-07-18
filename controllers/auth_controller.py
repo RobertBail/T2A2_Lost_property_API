@@ -6,7 +6,7 @@ from psycopg2 import errorcodes
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 from init import bcrypt, db
-from models.staff import Staff, staff_schema, StaffSchema
+from models.staff import Staff, staff_schema, staffs_schema
 #from controllers.enteredby_controller import enteredby_bp
 from utils import auth_as_admin_decorator
 
@@ -18,7 +18,7 @@ auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 def register_staff():
     try:
         # get the data from the body of the request
-        body_data = StaffSchema().load(request.get_json())
+        body_data = staff_schema.load(request.get_json())
 
         # create an instance of the Staff model
         staff = Staff(
@@ -132,7 +132,7 @@ def authorise_as_admin(fn):
 @jwt_required()
 def update_staff():
     # get the fields from body of the request
-    body_data = StaffSchema().load(request.get_json(), partial=True)
+    body_data = staff_schema.load(request.get_json(), partial=True)
     staff_password = body_data.get("staff_password")
     # add staff_email ?
     # fetch the staff member from the db
@@ -140,6 +140,9 @@ def update_staff():
     staff = db.session.scalar(stmt)
     # if staff member exists
     if staff:
+        is_admin = authorise_as_admin()
+        if not is_admin and str(staff.staff_id) != get_jwt_identity():
+            return {"error": "Staff member is not authorised to perform this deletion."}, 403
         # update the fields
         # add staff_email or instead of organisation_name?
         staff.organisation_name = body_data.get("organisation_name") or staff.organisation_name
@@ -166,6 +169,9 @@ def delete_staff(staff_id):
     staff = db.session.scalar(stmt)
     # if staff member exists
     if staff:
+        is_admin = authorise_as_admin()
+        if not is_admin and str(staff.staff_id) != get_jwt_identity():
+            return {"error": "Staff member is not authorised to perform this deletion."}, 403
         # delete the user
         db.session.delete(staff)
         db.session.commit()

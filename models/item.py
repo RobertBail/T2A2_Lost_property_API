@@ -22,7 +22,9 @@ class Item(db.Model):
     location_found = db.Column(db.String)
     now_claimed = db.Column(db.String)
 
-#staff_id = db.Column(db.Integer, db.ForeignKey("staff.id"), nullable=False)
+    staff_id = db.Column(db.Integer, db.ForeignKey("staff.id"), nullable=False)
+    enteredby_id = db.Column(db.Integer, db.ForeignKey("enteredby.id"), nullable=False)
+
     enteredbys = db.relationship("EnteredBy", back_populates="items", cascade="all, delete")
     #enteredby = db.relationship("EnteredBy", back_populates="item")
     staffs = db.relationship("Staff", back_populates="items")
@@ -32,10 +34,10 @@ class Item(db.Model):
 class ItemSchema(ma.Schema):
   
     enteredbys = fields.Nested('EnteredBySchema', only=["StaffName"])
-    #enteredbys = fields.Nested('EnteredBySchema')  for all fields in enteredbys?
+    #enteredbys = fields.Nested('EnteredBySchema')  for all fields in enteredbys including "enteredby_id"?
     #enteredby = fields.Nested('EnteredBySchema', only=["StaffName"])
     staffs = fields.Nested('StaffSchema', only=["staff_id", "organisation_name", "staff_email"])
-    #staff = fields.Nested('EnteredBySchema', only=["staff_id", "organisation_name", "staff_email"])
+    #staff = fields.Nested('StaffSchema', only=["staff_id", "organisation_name", "staff_email"])
     #for claimedby  also?
 
     item_id = fields.Integer()
