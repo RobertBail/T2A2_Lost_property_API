@@ -49,14 +49,14 @@ def new_enteredby():
 
 @enteredby_bp.route('/<int:enteredby_id>', methods=["DELETE"])
 @jwt_required()
-@authorise_as_admin
+#@authorise_as_admin
 def delete_enteredby(enteredby_id):
 
     stmt = db.select(EnteredBy).filter_by(enteredby_id=enteredby_id)
     enteredby = db.session.scalar(stmt)
     # if enteredby exists
     if enteredby:
-#       is_admin = authorise_as_admin()
+#        is_admin = authorise_as_admin()
 #        if not is_admin and str(enteredby.staff_id) != get_jwt_identity():    
         if str(enteredby.staff_id) != get_jwt_identity():
             return {"error": "Staff member is not authorised to perform this deletion."}, 403

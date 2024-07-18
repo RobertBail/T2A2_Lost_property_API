@@ -4,7 +4,7 @@ from marshmallow.validate import Length, And, Regexp, Range
 
 #all claimedby can be nullable
 class ClaimedBy(db.Model):
-    __tablename__ = "claimedbys"
+    __tablename__ = "claimedby"
     
     claimedby_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
@@ -16,12 +16,12 @@ class ClaimedBy(db.Model):
     #item_id = db.Column(db.Integer, db.ForeignKey("items.id"), nullable=False)
     #item_id = db.Column(db.Integer, db.ForeignKey("items.id"))
 
-    items = db.relationship("Item", back_populates="claimedbys")
+    items = db.relationship("Item", back_populates="claimedby")
     #item = db.relationship("Item", back_populates="claimedbys")
    
 class ClaimedBySchema(ma.Schema):
    
-   items = fields.Nested('ItemSchema', only=["item_id", "item_name"])
+   item = fields.Nested('ItemSchema', only=["item_id", "item_name"])
    #item = fields.Nested('ItemSchema', only=["item_id", "item_name"])
 
    name = fields.String(

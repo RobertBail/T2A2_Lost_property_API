@@ -56,7 +56,7 @@ def new_item():
 
 @item_bp.route("/<int:item_id>", methods=["DELETE"])
 @jwt_required()
-@authorise_as_admin  # is_admin = True
+#@authorise_as_admin  # is_admin = True
 def delete_item(item_id):
 
     stmt = db.select(Item).filter_by(item_id=item_id)
@@ -80,7 +80,7 @@ def delete_item(item_id):
     
 @item_bp.route("/<int:item_id>", methods=["PUT", "PATCH"])
 @jwt_required()
-@authorise_as_admin  # is_admin = True
+#@authorise_as_admin  # is_admin = True
 def update_item(item_id):
 
     # Get the item data to be updated from the body of the request

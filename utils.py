@@ -9,7 +9,7 @@ def authorise_as_admin():
     # get the user's id from get_jwt_identity
     staff_id = get_jwt_identity()
     # fetch the user from the db
-    stmt = db.select(Staff).filter_by(id=staff_id)
+    stmt = db.select(Staff).filter_by(staff_id=staff_id)
     staff = db.session.scalar(stmt)
     # check whether the user is an admin or not
     return staff.is_admin
@@ -20,7 +20,7 @@ def auth_as_admin_decorator(fn):
         # get the user's id from get_jwt_identity
         staff_id = get_jwt_identity()
         # fetch the entire user using the id
-        stmt = db.select(Staff).filter_by(id=staff_id)
+        stmt = db.select(Staff).filter_by(staff_id=staff_id)
         staff = db.session.scalar(stmt)
         # if user is an admin
 # change user to staff?

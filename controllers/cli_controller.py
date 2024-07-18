@@ -17,6 +17,8 @@ from models.enteredby import EnteredBy
 from models.item import Item
 from models.claimedby import ClaimedBy
 
+#enteredby = some_value
+
 db_commands = Blueprint("db", __name__)
 
 @db_commands.cli.command("create")
@@ -33,57 +35,61 @@ def drop_tables():
 
 def seed_tables():
     # create a list of Staff instances
-    staffs = [
+    staff = [
         Staff(
             #add organisation_name?
             organisation_name="Nick's Gym",
             staff_email="admin@email.com",
             staff_password=bcrypt.generate_password_hash("test1pw%").decode("utf-8"),
-            is_admin=True
+            is_admin=True,
+            #enteredby=enteredby[0]
         ),
         Staff(
             organisation_name="Nick's Gym",
             staff_email="staff1@nicks.com",
             staff_password=bcrypt.generate_password_hash("staff1pw!").decode("utf-8"),
+            #enteredby=enteredby[1]
         ),
         Staff(
             organisation_name="Nick's Gym",
             staff_email="staff2@nicks.com",
             staff_password=bcrypt.generate_password_hash("staff2pw#").decode("utf-8"),
+            #enteredby=enteredby[2],
         ),
         Staff(
             organisation_name="Nick's Gym",
             staff_email="Julia3staff@nicks.com",
             staff_password=bcrypt.generate_password_hash("Julia3staffPW$").decode("utf-8"),
+            #enteredby=enteredby[3],
         )
     ]
 
-    db.session.add_all(staffs)
+    db.session.add_all(staff)
 
 # for the purpose of a staff account/enteredby details table
-    enteredbys = [
+    enteredby = [
         EnteredBy(
             StaffName="Keith Smith",
             role="Admin Manager",
-            #add anything else?
-            staff=staffs[0]
+            staff=staff[0]
+            #add anything else?  
             #item=items[0],
         ),
         EnteredBy(
             StaffName="Gerald Simmons",
             role="Teacher",
-            staff=staffs[1]
+            staff=staff[1]
         ),
         EnteredBy(
             StaffName="Julia Burns",
             role="Swimming Instructor",
-            staff=staffs[2]
+            staff=staff[2]
         )
     ]
 
-    db.session.add_all(enteredbys)
+    db.session.add_all(enteredby)
 
-    items = [
+    item = [
         Item(
             item_name="Adidas T-Shirt",
             description="black and white large",
@@ -93,8 +99,8 @@ def seed_tables():
             #staff/user enters time manually
             location_found="locker room under bench",
             now_claimed="Yes",
-            enteredby=enteredbys[0],
-            #staff=staffs[0]
+            enteredby=enteredby[0],
+            staff=staff[0]
             # id? or relationship?
         ),
          Item(
@@ -105,7 +111,8 @@ def seed_tables():
             time_found ="2:00PM",
             location_found="next to bins",
             now_claimed="Yes",
-            enteredby=enteredbys[1],
+            enteredby=enteredby[1],
+            staff=staff[1]
             # id?
         ),
         Item(
@@ -116,14 +123,15 @@ def seed_tables():
             time_found ="10:00AM",
             location_found="locker room shower",
             now_claimed="No",
-            enteredby=enteredbys[2],
+            enteredby=enteredby[2],
+            staff=staff[2]
             # id?
         ),
     ]
 
-    db.session.add_all(items)
+    db.session.add_all(item)
  
-    claimedbys = [
+    claimedby = [
         ClaimedBy(
     #information to know who collected the item and when, eg. in case of mix-ups, theft even perhaps
             name="Tim Johnson",
@@ -131,7 +139,7 @@ def seed_tables():
             email="tjohnson100@aol.com",
             address="222 Bank St Sydney",
             date_claimed=date.today(),
-            item=items[0],
+            item=item[0],
         #reference items id?
         #reference staff id?
         ),
@@ -141,7 +149,7 @@ def seed_tables():
             email="sgold33@gmail.com",
             address="444 Smith St Mascot",
             date_claimed=date.today(),
-            item=items[1],
+            item=item[1],
         #reference items id?
         #reference staff id?
         ),
@@ -157,7 +165,7 @@ def seed_tables():
        # ),
     ]
 
-    db.session.add_all(claimedbys)
+    db.session.add_all(claimedby)
 
     db.session.commit()
 

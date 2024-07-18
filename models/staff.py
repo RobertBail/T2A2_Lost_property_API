@@ -2,10 +2,12 @@ from init import db, ma
 from marshmallow import fields
 from marshmallow.validate import Length, And, Regexp
 #from marshmallow.validate import Length, And, Regexp?
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
 
 class Staff(db.Model):
     # Name of the table. I know staffs isn't correct grammar, but to simplify and not confuse terminology/references too much
-    __tablename__ = "staffs"
+    __tablename__ = "staff"
 
     # attributes of the table
     staff_id = db.Column(db.Integer, primary_key=True)
@@ -15,14 +17,14 @@ class Staff(db.Model):
     is_admin = db.Column(db.Boolean, default=False)
     
     #is_admin = db.Column(db.Boolean, default=False)
-    items = db.relationship("Item", back_populates="staff")
+    item = db.relationship("Item", back_populates="staff")
     #plural or single? item = db.relationship("Item", back_populates="staff")
-    #enteredby = db.relationship("EnteredBy", back_populates="staff")
+    enteredby = db.relationship("EnteredBy", back_populates="staff")
     #forward or back?
 
 
 class StaffSchema(ma.Schema):
-    items = fields.Nested('ItemSchema', only=["item_id", "item_name"])
+    #item = fields.Nested('ItemSchema', only=["item_id", "item_name"])
    
     organisation_name = fields.String(required=True, validate=And(
             Length(min=2,

@@ -10,7 +10,7 @@ from marshmallow.validate import Length, And, Regexp, OneOf, Range
 VALID_STATUSES = ( "Yes", "No" )
 
 class Item(db.Model):
-    __tablename__ = "items"
+    __tablename__ = "item"
 
     item_id = db.Column(db.Integer, primary_key=True)
     item_name = db.Column(db.String, nullable=False)
@@ -22,21 +22,21 @@ class Item(db.Model):
     location_found = db.Column(db.String)
     now_claimed = db.Column(db.String)
 
-    staff_id = db.Column(db.Integer, db.ForeignKey("staff.id"), nullable=False)
-    enteredby_id = db.Column(db.Integer, db.ForeignKey("enteredby.id"), nullable=False)
+    staff_id = db.Column(db.Integer, db.ForeignKey("staff.staff_id"), nullable=False)
+    enteredby_id = db.Column(db.Integer, db.ForeignKey("enteredby.enteredby_id"), nullable=False)
 
-    enteredbys = db.relationship("EnteredBy", back_populates="items", cascade="all, delete")
+    enteredby = db.relationship("EnteredBy", back_populates="item", cascade="all, delete")
     #enteredby = db.relationship("EnteredBy", back_populates="item")
-    staffs = db.relationship("Staff", back_populates="items")
+    staff = db.relationship("Staff", back_populates="item")
     #staff = db.relationship("Staff", back_populates="item")
     #for claimedby  also?
 
 class ItemSchema(ma.Schema):
   
-    enteredbys = fields.Nested('EnteredBySchema', only=["StaffName"])
+    enteredby = fields.Nested('EnteredBySchema', only=["StaffName"])
     #enteredbys = fields.Nested('EnteredBySchema')  for all fields in enteredbys including "enteredby_id"?
     #enteredby = fields.Nested('EnteredBySchema', only=["StaffName"])
-    staffs = fields.Nested('StaffSchema', only=["staff_id", "organisation_name", "staff_email"])
+    staff = fields.Nested('StaffSchema', only=["staff_id", "organisation_name", "staff_email"])
     #staff = fields.Nested('StaffSchema', only=["staff_id", "organisation_name", "staff_email"])
     #for claimedby  also?
 

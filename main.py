@@ -3,9 +3,11 @@ import os
 from flask import Flask
 from marshmallow.exceptions import ValidationError
 
-from init import db, ma, bcrypt, jwt
+from init import db, ma, bcrypt, jwt, migrate
+
 
 def create_app():
+    
     app = Flask(__name__)
 
     app.json.sort_keys = False
@@ -18,6 +20,7 @@ def create_app():
     ma.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)
+    migrate.init_app(app,db)
 
     @app.errorhandler(ValidationError)
     def validation_error(err):
@@ -36,7 +39,7 @@ def create_app():
 
     from controllers.auth_controller import auth_bp
     app.register_blueprint(auth_bp)
-# for staff?
+# for staff
 
     from controllers.enteredby_controller import enteredby_bp
     app.register_blueprint(enteredby_bp)
