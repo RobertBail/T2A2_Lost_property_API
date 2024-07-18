@@ -8,11 +8,11 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 
 from init import bcrypt, db
 from models.staff import Staff, staff_schema, staffs_schema
-#from controllers.enteredby_controller import enteredby_bp
+from controllers.enteredby_controller import enteredby_bp
 #from utils import auth_as_admin_decorator
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
-#auth_bp.register_blueprint(enteredby_bp)
+auth_bp.register_blueprint(enteredby_bp)
 #change __name__ ?
 
 @auth_bp.route("/register", methods=["POST"])

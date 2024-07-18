@@ -5,11 +5,11 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from init import db
 from models.claimedby import ClaimedBy, claimedby_schema, claimedbys_schema
-from controllers.auth_controller import auth_bp
-from utils import authorise_as_admin
+#from controllers.item_controller import item_bp
+#from utils import authorise_as_admin
 
 claimedby_bp = Blueprint("claimedby", __name__, url_prefix="/claimedby")
-claimedby_bp.register_blueprint(auth_bp) 
+#claimedby_bp.register_blueprint(item_bp) 
 
 #desc() meaning sort the result in a descending order.
 @claimedby_bp.route('/')

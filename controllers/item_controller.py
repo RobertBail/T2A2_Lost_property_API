@@ -6,12 +6,12 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from init import db
 from models.item import Item, item_schema, items_schema
 #from controllers.comment_controller import comments_bp
-#from controllers.claimedby_controller import claimedby_bp
+from controllers.claimedby_controller import claimedby_bp
 #from controllers.auth_controller import authorise_as_admin
-from utils import authorise_as_admin            
+#from utils import authorise_as_admin            
             
 item_bp = Blueprint("items", __name__, url_prefix="/items")
-#items_bp.register_blueprint(claimedby_bp)            
+item_bp.register_blueprint(claimedby_bp)            
 
 @item_bp.route("/") 
 

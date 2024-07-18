@@ -6,12 +6,13 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from init import db
 from models.enteredby import EnteredBy, enteredby_schema, enteredbys_schema
 #from models.staff import Staff
-from controllers.auth_controller import auth_bp
-from utils import authorise_as_admin
+#from controllers.auth_controller import auth_bp
+from controllers.item_controller import item_bp
+#from utils import authorise_as_admin
 
 #enteredby_bp = Blueprint("claimedby", __name__, url_prefix="/<int:staff_id>/enteredby")
 enteredby_bp = Blueprint("enteredby", __name__, url_prefix="/enteredby")
-enteredby_bp.register_blueprint(auth_bp) 
+enteredby_bp.register_blueprint(item_bp) 
 
 #needed? 
 #def authorise_as_admin(fn):

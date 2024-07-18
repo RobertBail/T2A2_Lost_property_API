@@ -42,25 +42,27 @@ def seed_tables():
             staff_email="admin@email.com",
             staff_password=bcrypt.generate_password_hash("test1pw%").decode("utf-8"),
             is_admin=True,
-            #enteredby=enteredby[0]
+            enteredby=enteredby[0]
+#Contradictory error messages: UnboundLocalError: "local variable 'enteredby' referenced before assignment"
+# and "Mapper 'Mapper[EnteredBy(enteredby)]' has no property 'staff'." Enteredby should have or reference 'staff'
         ),
         Staff(
             organisation_name="Nick's Gym",
             staff_email="staff1@nicks.com",
             staff_password=bcrypt.generate_password_hash("staff1pw!").decode("utf-8"),
-            #enteredby=enteredby[1]
+            enteredby=enteredby[1]
         ),
         Staff(
             organisation_name="Nick's Gym",
             staff_email="staff2@nicks.com",
             staff_password=bcrypt.generate_password_hash("staff2pw#").decode("utf-8"),
-            #enteredby=enteredby[2],
+            enteredby=enteredby[2],
         ),
         Staff(
             organisation_name="Nick's Gym",
             staff_email="Julia3staff@nicks.com",
             staff_password=bcrypt.generate_password_hash("Julia3staffPW$").decode("utf-8"),
-            #enteredby=enteredby[3],
+            enteredby=enteredby[3],
         )
     ]
 
