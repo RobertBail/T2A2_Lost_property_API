@@ -9,7 +9,7 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 from init import bcrypt, db
 from models.staff import Staff, staff_schema, staffs_schema
 #from controllers.enteredby_controller import enteredby_bp
-from utils import auth_as_admin_decorator
+#from utils import auth_as_admin_decorator
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 #auth_bp.register_blueprint(enteredby_bp)
@@ -97,33 +97,35 @@ def is_staff_admin():
     return staff.is_admin
 
 
-# Decorator function to make sure staff member is an admin (for games, platforms and genre routes)
+# Decorator function to make sure staff member is an admin 
 def authorise_as_admin(fn):
-    @functools.wraps(fn)
-    def wrapper(*args, **kwargs):
-
-        # Get user_id from the JWT token
-        staff_id = int(get_jwt_identity())
-
-        # SELECT * FROM users where user_id = jwt_user_id
+#    @functools.wraps(fn)
+#    def wrapper(*args, **kwargs):
+        # Get staff_id from the JWT token
+        staff_id = get_jwt_identity()
+    # fetch the user from the db
         stmt = db.select(Staff).filter_by(staff_id=staff_id)
         staff = db.session.scalar(stmt)
+    # check whether the user is an admin or not
+        return staff.is_admin
 
-        # For edge case where old JWT token is used for a deleted account
-        if staff is None:
-            return {
-                "error": "The logged in staff member has been deleted. Please login again."
-            }, 403
+def auth_as_admin_decorator(fn):
+    @functools.wraps(fn)
+    def wrapper(*args, **kwargs):
+        # get the user's id from get_jwt_identity
+        staff_id = get_jwt_identity()
+        # fetch the entire user using the id
+        stmt = db.select(Staff).filter_by(staff_id=staff_id)
+        staff = db.session.scalar(stmt)
+        # if user is an admin
 
-        # Run the decorated function if staff member is admin
         if staff.is_admin:
+            # allow the decorated function to execute
             return fn(*args, **kwargs)
-
-        # Else, return error that staff member is not an admin
+        # else (user is not an admin)
         else:
-            return {
-                "error": "Staff member does not have admin privilleges"
-            }, 403
+            # return error
+            return {"error": "Only admin can perform this action"}, 403
 
     return wrapper
 
