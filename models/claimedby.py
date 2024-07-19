@@ -6,7 +6,7 @@ from marshmallow.validate import Length, And, Regexp, Range
 class ClaimedBy(db.Model):
     __tablename__ = "claimedbys"
     
-    claimedby_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     phone = db.Column(db.Integer)
     email = db.Column(db.String, unique=True)
@@ -14,15 +14,20 @@ class ClaimedBy(db.Model):
     date_claimed = db.Column(db.Date)
 
     #item_id = db.Column(db.Integer, db.ForeignKey("items.id"), nullable=False)
-    item_id = db.Column(db.Integer, db.ForeignKey("items.item_id"))
-
+    item_id = db.Column(db.Integer, db.ForeignKey("items.id"))
+    staff_id = db.Column(db.Integer, db.ForeignKey("staffs.id"), nullable=False)
     #items = db.relationship("Item", back_populates="claimedby")
-    #item = db.relationship("Item", back_populates="claimedbys")
+    item = db.relationship("Item", back_populates="claimedby")
+    staff = db.relationship("Staff", back_populates="claimedby")
    
 class ClaimedBySchema(ma.Schema):
-   
-   item = fields.Nested('ItemSchema', only=["item_id", "item_name"])
+   id = fields.Int()
+   staff_id = fields.Int()
+   item_id = fields.Int()
+
+   item = fields.Nested('ItemSchema', only=["item_name"])
    #item = fields.Nested('ItemSchema', only=["item_id", "item_name"])
+   staff = fields.Nested('StaffSchema', only=["staff_email"])
 
    name = fields.String(
         required=True,
@@ -53,7 +58,7 @@ class ClaimedBySchema(ma.Schema):
 
    class Meta:
         fields = (
-            "claimedby_id",
+            "id",
             "name",
             "phone",
             "email",

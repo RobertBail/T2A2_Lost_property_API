@@ -12,9 +12,9 @@ VALID_STATUSES = ( "Yes", "No" )
 class Item(db.Model):
     __tablename__ = "items"
 
-    item_id = db.Column(db.Integer, primary_key=True)
-    item_name = db.Column(db.String, nullable=False)
-    description = db.Column(db.String, nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    item_name = db.Column(db.String)
+    description = db.Column(db.String)
     quantity = db.Column(db.Integer) 
     date_found = db.Column(db.Date)
     time_found = db.Column(db.String)
@@ -22,23 +22,27 @@ class Item(db.Model):
     location_found = db.Column(db.String)
     now_claimed = db.Column(db.String)
 
-    staff_id = db.Column(db.Integer, db.ForeignKey("staffs.staff_id"), nullable=False)
-    enteredby_id = db.Column(db.Integer, db.ForeignKey("enteredbys.enteredby_id"), nullable=False)
+    enteredby_id = db.Column(db.Integer, db.ForeignKey("enteredbys.id"), nullable=False)
+    staff_id = db.Column(db.Integer, db.ForeignKey("staffs.id"), nullable=False)
+    #claimedby_id = db.Column(db.Integer, db.ForeignKey("claimedbys.claimedby_id"))
 
     enteredby = db.relationship("EnteredBy", back_populates="item", cascade="all, delete")
     #enteredby = db.relationship("EnteredBy", back_populates="item")
     staff = db.relationship("Staff", back_populates="item")
     #staff = db.relationship("Staff", back_populates="item")
-    #for claimedby  also?
+    claimedby = db.relationship("ClaimedBy", back_populates="item")
 
 class ItemSchema(ma.Schema):
+    id = fields.Int()
+    enteredby_id = fields.Int()
+    staff_id = fields.Int()
   
     enteredby = fields.Nested('EnteredBySchema', only=["StaffName"])
     #enteredbys = fields.Nested('EnteredBySchema')  for all fields in enteredbys including "enteredby_id"?
     #enteredby = fields.Nested('EnteredBySchema', only=["StaffName"])
-    staff = fields.Nested('StaffSchema', only=["staff_id", "organisation_name", "staff_email"])
+    staff = fields.Nested('StaffSchema', only=["id", "organisation_name", "staff_email"])
     #staff = fields.Nested('StaffSchema', only=["staff_id", "organisation_name", "staff_email"])
-    #for claimedby  also?
+    #claimedby = fields.Nested('ClaimedBySchema', only=["claimedby_id", "name"])
 
     item_id = fields.Integer()
     item_name = fields.String(
@@ -104,7 +108,7 @@ class ItemSchema(ma.Schema):
 
     class Meta:
         fields = (
-            "item_id",
+            "id",
             "item_name",
             "description",
             "quantity",

@@ -37,9 +37,8 @@ def seed_tables():
     # create a list of Staff instances
     staffs = [
         Staff(
-            #add organisation_name?
             organisation_name="Nick's Gym",
-            staff_email="admin@email.com",
+            staff_email="KSmithadmin@email.com",
             staff_password=bcrypt.generate_password_hash("test1pw%").decode("utf-8"),
             is_admin=True,
             #enteredby=enteredby[0]
@@ -48,21 +47,18 @@ def seed_tables():
         ),
         Staff(
             organisation_name="Nick's Gym",
-            staff_email="staff1@nicks.com",
+            staff_email="Geraldsimmons1@nicks.com",
             staff_password=bcrypt.generate_password_hash("staff1pw!").decode("utf-8"),
-            #enteredby_id=2
         ),
         Staff(
             organisation_name="Nick's Gym",
-            staff_email="staff2@nicks.com",
+            staff_email="Julia1staff2@nicks.com",
             staff_password=bcrypt.generate_password_hash("staff2pw#").decode("utf-8"),
-            #enteredby=enteredby[2],
         ),
         Staff(
             organisation_name="Nick's Gym",
-            staff_email="Julia3staff@nicks.com",
+            staff_email="AnthonyS3staff@nicks.com",
             staff_password=bcrypt.generate_password_hash("Julia3staffPW$").decode("utf-8"),
-            #enteredby=enteredby[3],
         )
     ]
 
@@ -73,18 +69,23 @@ def seed_tables():
         EnteredBy(
             StaffName="Keith Smith",
             role="Admin Manager",
-            staff_id=1
+            staff_id=0
             #add anything else?  
             #item=items[0],
         ),
         EnteredBy(
             StaffName="Gerald Simmons",
             role="Teacher",
-            staff_id=2
+            staff_id=1
         ),
         EnteredBy(
             StaffName="Julia Burns",
             role="Swimming Instructor",
+            staff_id=2
+        ),
+        EnteredBy(
+            StaffName="Anthony Stevens",
+            role="Personal Trainer",
             staff_id=3
         )
     ]
@@ -126,7 +127,7 @@ def seed_tables():
             location_found="locker room shower",
             now_claimed="No",
             enteredby_id=3,
-            staff_id=2
+            staff_id=3
             # id?
         ),
     ]
@@ -141,6 +142,7 @@ def seed_tables():
             email="tjohnson100@aol.com",
             address="222 Bank St Sydney",
             date_claimed=date.today(),
+            staff_id=1,
             item_id=1,
         #reference items id?
         #reference staff id?
@@ -151,7 +153,9 @@ def seed_tables():
             email="sgold33@gmail.com",
             address="444 Smith St Mascot",
             date_claimed=date.today(),
+            staff_id=2,
             item_id=2,
+            
         #reference items id?
         #reference staff id?
         ),
