@@ -10,7 +10,7 @@ from marshmallow.validate import Length, And, Regexp, OneOf, Range
 VALID_STATUSES = ( "Yes", "No" )
 
 class Item(db.Model):
-    __tablename__ = "item"
+    __tablename__ = "items"
 
     item_id = db.Column(db.Integer, primary_key=True)
     item_name = db.Column(db.String, nullable=False)
@@ -22,8 +22,8 @@ class Item(db.Model):
     location_found = db.Column(db.String)
     now_claimed = db.Column(db.String)
 
-    staff_id = db.Column(db.Integer, db.ForeignKey("staff.staff_id"), nullable=False)
-    enteredby_id = db.Column(db.Integer, db.ForeignKey("enteredby.enteredby_id"), nullable=False)
+    staff_id = db.Column(db.Integer, db.ForeignKey("staffs.staff_id"), nullable=False)
+    enteredby_id = db.Column(db.Integer, db.ForeignKey("enteredbys.enteredby_id"), nullable=False)
 
     enteredby = db.relationship("EnteredBy", back_populates="item", cascade="all, delete")
     #enteredby = db.relationship("EnteredBy", back_populates="item")

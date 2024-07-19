@@ -6,14 +6,14 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
  
 class EnteredBy(db.Model):
-    __tablename__ = "enteredby"
+    __tablename__ = "enteredbys"
 
     enteredby_id = db.Column(db.Integer, primary_key=True)
     StaffName =  db.Column(db.String, nullable=False)
     role = db.Column(db.String)
 
-    staff_id = db.Column(db.Integer, db.ForeignKey("staff.staff_id"), nullable=False)
-    #staff = db.relationship('Staff', back_populates='enteredby')
+    staff_id = db.Column(db.Integer, db.ForeignKey("staffs.staff_id"), nullable=False)
+    staff = db.relationship("Staff", back_populates="enteredby")
 
 class EnteredBySchema(ma.Schema):
 

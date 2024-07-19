@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship
 
 class Staff(db.Model):
     # Name of the table. I know staffs isn't correct grammar, but to simplify and not confuse terminology/references too much
-    __tablename__ = "staff"
+    __tablename__ = "staffs"
 
     # attributes of the table
     staff_id = db.Column(db.Integer, primary_key=True)
@@ -17,14 +17,15 @@ class Staff(db.Model):
     is_admin = db.Column(db.Boolean, default=False)
     
     #is_admin = db.Column(db.Boolean, default=False)
-    item = db.relationship("Item", back_populates="staff")
+    #item = db.relationship("Item", back_populates="staff")
     #plural or single? item = db.relationship("Item", back_populates="staff")
-    enteredby = db.relationship("EnteredBy", back_populates="staff")
+    #enteredbys = db.relationship("EnteredBy", back_populates="staff")
     #forward or back?
 
 
 class StaffSchema(ma.Schema):
-    #item = fields.Nested('ItemSchema', only=["item_id", "item_name"])
+    #item = fields.Nested("ItemSchema", only=["item_id", "item_name"])
+    #enteredby = fields.Nested("EnteredBySchema", exclude=["enteredby_id"])
    
     organisation_name = fields.String(required=True, validate=And(
             Length(min=2,
