@@ -46,7 +46,7 @@ def new_item():
         location_found=body_data.get("location_found"),
         now_claimed=body_data.get("now_claimed"), 
         staff_id=get_jwt_identity(),
-        enteredby_id=get_jwt_identity()
+        staffprofile_id=get_jwt_identity()
     )
     # add and commit to DB
     db.session.add(item)

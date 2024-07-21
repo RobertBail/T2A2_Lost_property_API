@@ -22,24 +22,24 @@ class Item(db.Model):
     location_found = db.Column(db.String)
     now_claimed = db.Column(db.String)
 
-    enteredby_id = db.Column(db.Integer, db.ForeignKey("enteredbys.id"), nullable=False)
-    staff_id = db.Column(db.Integer, db.ForeignKey("staffs.id"), nullable=False)
+    staffprofile_id = db.Column(db.Integer, db.ForeignKey("staffprofiles.staffprofile_id"), nullable=False)
+    staff_id = db.Column(db.Integer, db.ForeignKey("staffs.staff_id"), nullable=False)
     #claimedby_id = db.Column(db.Integer, db.ForeignKey("claimedbys.claimedby_id"))
 
-    enteredby = db.relationship("EnteredBy", back_populates="item", cascade="all, delete")
-    #enteredby = db.relationship("EnteredBy", back_populates="item")
+    staffprofile = db.relationship("StaffProfile", back_populates="item", cascade="all, delete")
+    #staffprofile = db.relationship("StaffProfile", back_populates="item")
     staff = db.relationship("Staff", back_populates="item")
     #staff = db.relationship("Staff", back_populates="item")
     claimedby = db.relationship("ClaimedBy", back_populates="item")
 
 class ItemSchema(ma.Schema):
-    id = fields.Int()
-    enteredby_id = fields.Int()
-    staff_id = fields.Int()
+    id = fields.Integer()
+    staffprofile_id = fields.Integer()
+    staff_id = fields.Integer()
   
-    enteredby = fields.Nested('EnteredBySchema', only=["StaffName"])
-    #enteredbys = fields.Nested('EnteredBySchema')  for all fields in enteredbys including "enteredby_id"?
-    #enteredby = fields.Nested('EnteredBySchema', only=["StaffName"])
+    staffprofile = fields.Nested('StaffProfileSchema', only=["StaffName"])
+    #staffprofiles = fields.Nested('StaffProfileSchema')  for all fields in staffprofiles including "staffprofile_id"?
+    #staffprofile = fields.Nested('StaffProfileSchema', only=["StaffName"])
     staff = fields.Nested('StaffSchema', only=["id", "organisation_name", "staff_email"])
     #staff = fields.Nested('StaffSchema', only=["staff_id", "organisation_name", "staff_email"])
     #claimedby = fields.Nested('ClaimedBySchema', only=["claimedby_id", "name"])
@@ -116,6 +116,9 @@ class ItemSchema(ma.Schema):
             "time_found",
             "location_found",
             "now_claimed",
+            "staffprofile_id",
+            "staff_id",
+            "claimedby"
         )
 
 

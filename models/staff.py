@@ -10,7 +10,7 @@ class Staff(db.Model):
     __tablename__ = "staffs"
 
     # attributes of the table
-    id = db.Column(db.Integer, primary_key=True)
+    staff_id = db.Column(db.Integer, primary_key=True)
     organisation_name = db.Column(db.String, nullable=False)
     staff_email = db.Column(db.String, nullable=False, unique=True)
     staff_password = db.Column(db.String, nullable=False)
@@ -19,13 +19,13 @@ class Staff(db.Model):
     #is_admin = db.Column(db.Boolean, default=False)
     item = db.relationship("Item", back_populates="staff")
     #plural or single? item = db.relationship("Item", back_populates="staff")
-    enteredby = db.relationship("EnteredBy", back_populates="staff")
+    staffprofile = db.relationship("StaffProfile", back_populates="staff")
     claimedby = db.relationship("ClaimedBy", back_populates="staff")
     #forward or back?
 
 
 class StaffSchema(ma.Schema):
-    id = fields.Int()
+    staff_id = fields.Integer()
     #item = fields.Nested("ItemSchema", only=["item_id", "item_name"])
     #enteredby = fields.Nested("EnteredBySchema", exclude=["enteredby_id"])
    
@@ -53,7 +53,15 @@ class StaffSchema(ma.Schema):
     )
 
     class Meta:
-        fields = ("id", "organisation_name", "staff_email", "staff_password", "is_admin")
+        fields = ("staff_id", 
+                  "organisation_name", 
+                  "staff_email", 
+                  "staff_password", 
+                  "is_admin", 
+                  "item",
+                  "staffprofile",
+                  "claimedby"
+                  )
 
 
 # to handle a single staff object

@@ -7,19 +7,19 @@ from psycopg2 import errorcodes
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 from init import bcrypt, db
-from models.staff import Staff, staff_schema, staffs_schema
-from controllers.enteredby_controller import enteredby_bp
+from models.staff import Staff, StaffSchema, staff_schema, staffs_schema
+#from controllers.staffprofile_controller import staffprofile_bp
 #from utils import auth_as_admin_decorator
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
-auth_bp.register_blueprint(enteredby_bp)
+#auth_bp.register_blueprint(staffprofile_bp)
 #change __name__ ?
 
 @auth_bp.route("/register", methods=["POST"])
 def register_staff():
     try:
         # get the data from the body of the request
-        body_data = staff_schema.load(request.get_json())
+        body_data = StaffSchema.load(request.get_json())
 
         # create an instance of the Staff model
         staff = Staff(
@@ -51,7 +51,8 @@ def register_staff():
 def login_staff():
 
     # Get the data from the request body
-    body_data = staff_schema.load(request.get_json())
+    body_data = request.get_json()
+    #body_data = staff_schema.load(request.get_json())
 
     # Find user with the email address
     # SELECT * FROM users WHERE email = 'user_email_here';
@@ -70,7 +71,7 @@ def login_staff():
 
     # Assuming account was found, create JWT
     token = create_access_token(
-        identity=str(staff.staff_id), expires_delta=timedelta(days=1)
+        identity=str(staff.id), expires_delta=timedelta(days=1)
     )
     # Return the token along with the user info
     return {"staff_email": staff.staff_email, "token": token, "is_admin": staff.is_admin}
@@ -98,26 +99,31 @@ def is_staff_admin():
 
 
 # Decorator function to make sure staff member is an admin 
-def authorise_as_admin(fn):
+#def authorise_as_admin(fn):
 #    @functools.wraps(fn)
 #    def wrapper(*args, **kwargs):
         # Get staff_id from the JWT token
-        staff_id = get_jwt_identity()
+#        staff_id = get_jwt_identity()
     # fetch the user from the db
-        stmt = db.select(Staff).filter_by(staff_id=staff_id)
-        staff = db.session.scalar(stmt)
+#        stmt = db.select(Staff).filter_by(staff_id=staff_id)
+#        staff = db.session.scalar(stmt)
     # check whether the user is an admin or not
-        return staff.is_admin
+#        return staff.is_admin
 
-def auth_as_admin_decorator(fn):
+#def auth_as_admin_decorator(fn):
+def authorise_as_admin(fn):
     @functools.wraps(fn)
     def wrapper(*args, **kwargs):
         # get the user's id from get_jwt_identity
-        staff_id = get_jwt_identity()
+        staff_id = int(get_jwt_identity())
         # fetch the entire user using the id
         stmt = db.select(Staff).filter_by(staff_id=staff_id)
         staff = db.session.scalar(stmt)
         # if user is an admin
+        if staff is None:
+            return {
+                "error": "The logged in staff has been deleted. Please login again."
+            }, 403
 
         if staff.is_admin:
             # allow the decorated function to execute
@@ -133,6 +139,7 @@ def auth_as_admin_decorator(fn):
     #Delete staff here?
 @auth_bp.route("/staff", methods=["PUT", "PATCH"])
 @jwt_required()
+@authorise_as_admin
 def update_staff():
     # get the fields from body of the request
     body_data = staff_schema.load(request.get_json(), partial=True)
@@ -145,11 +152,11 @@ def update_staff():
     if staff:
         is_admin = authorise_as_admin()
         if not is_admin and str(staff.staff_id) != get_jwt_identity():
-            return {"error": "Staff member is not authorised to perform this deletion."}, 403
+            return {"error": "Staff member is not authorised to perform this update."}, 403
         # update the fields
         # add staff_email or instead of organisation_name?
         staff.organisation_name = body_data.get("organisation_name") or staff.organisation_name
-        #staff.staff_email=body_data.get("staff_email") or staff.staff_email
+        staff.staff_email=body_data.get("staff_email") or staff.staff_email
         # user.password = <hashed-password> or user.password
         if staff_password:
             staff.staff_password = bcrypt.generate_password_hash(staff_password).decode("utf-8")
@@ -165,10 +172,10 @@ def update_staff():
 # /auth/users/user_id - DELETE
 @auth_bp.route("/staff/<int:staff_id>", methods=["DELETE"])
 @jwt_required()
-@auth_as_admin_decorator
+@authorise_as_admin
 def delete_staff(staff_id):
     # find the staff member with the id from DB
-    stmt = db.select(Staff).filter_by(id=staff_id)
+    stmt = db.select(Staff).filter_by(staff_id=get_jwt_identity())
     staff = db.session.scalar(stmt)
     # if staff member exists
     if staff:

@@ -13,7 +13,7 @@ from flask import Blueprint
 
 from init import db, bcrypt
 from models.staff import Staff
-from models.enteredby import EnteredBy
+from models.staffprofile import StaffProfile
 from models.item import Item
 from models.claimedby import ClaimedBy
 
@@ -32,30 +32,30 @@ def drop_tables():
     print("Tables dropped")
 
 @db_commands.cli.command("seed")
-
 def seed_tables():
     # create a list of Staff instances
     staffs = [
         Staff(
+            staff_id=1,
             organisation_name="Nick's Gym",
-            staff_email="KSmithadmin@email.com",
+            staff_email="admin@email.com",
             staff_password=bcrypt.generate_password_hash("test1pw%").decode("utf-8"),
             is_admin=True,
-            #enteredby=enteredby[0]
-#Contradictory error messages: UnboundLocalError: "local variable 'enteredby' referenced before assignment"
-# and "Mapper 'Mapper[EnteredBy(enteredby)]' has no property 'staff'." Enteredby should have or reference 'staff'
         ),
         Staff(
+            staff_id=2,
             organisation_name="Nick's Gym",
             staff_email="Geraldsimmons1@nicks.com",
             staff_password=bcrypt.generate_password_hash("staff1pw!").decode("utf-8"),
         ),
         Staff(
+            staff_id=3,
             organisation_name="Nick's Gym",
             staff_email="Julia1staff2@nicks.com",
             staff_password=bcrypt.generate_password_hash("staff2pw#").decode("utf-8"),
         ),
         Staff(
+            staff_id=4,
             organisation_name="Nick's Gym",
             staff_email="AnthonyS3staff@nicks.com",
             staff_password=bcrypt.generate_password_hash("Julia3staffPW$").decode("utf-8"),
@@ -64,33 +64,37 @@ def seed_tables():
 
     db.session.add_all(staffs)
 
-# for the purpose of a staff account/enteredby details table
-    enteredbys = [
-        EnteredBy(
-            StaffName="Keith Smith",
-            role="Admin Manager",
-            staff_id=0
+# for the purpose of a staff details table
+    staffprofiles = [
+        StaffProfile(
+            staffprofile_id=1,
+            StaffName="Admin",
+            role="Admin",
+            staff_id=1
             #add anything else?  
             #item=items[0],
         ),
-        EnteredBy(
+        StaffProfile(
+            staffprofile_id=2,
             StaffName="Gerald Simmons",
             role="Teacher",
-            staff_id=1
-        ),
-        EnteredBy(
-            StaffName="Julia Burns",
-            role="Swimming Instructor",
             staff_id=2
         ),
-        EnteredBy(
+        StaffProfile(
+            staffprofile_id=3,
+            StaffName="Julia Burns",
+            role="Swimming Instructor",
+            staff_id=3
+        ),
+        StaffProfile(
+            staffprofile_id=4,
             StaffName="Anthony Stevens",
             role="Personal Trainer",
-            staff_id=3
+            staff_id=4
         )
     ]
 
-    db.session.add_all(enteredbys)
+    db.session.add_all(staffprofiles)
 
     items = [
         Item(
@@ -102,7 +106,7 @@ def seed_tables():
             #staff/user enters time manually
             location_found="locker room under bench",
             now_claimed="Yes",
-            enteredby_id=1,
+            staffprofile_id=1,
             staff_id=1
             # id? or relationship?
         ),
@@ -114,7 +118,7 @@ def seed_tables():
             time_found ="2:00PM",
             location_found="next to bins",
             now_claimed="Yes",
-            enteredby_id=2,
+            staffprofile_id=2,
             staff_id=2
             # id?
         ),
@@ -126,7 +130,7 @@ def seed_tables():
             time_found ="10:00AM",
             location_found="locker room shower",
             now_claimed="No",
-            enteredby_id=3,
+            staffprofile_id=3,
             staff_id=3
             # id?
         ),

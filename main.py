@@ -41,8 +41,8 @@ def create_app():
     app.register_blueprint(auth_bp)
 # for staff
 
-    from controllers.enteredby_controller import enteredby_bp
-    app.register_blueprint(enteredby_bp)
+    from controllers.staffprofile_controller import staffprofile_bp
+    app.register_blueprint(staffprofile_bp)
 
     from controllers.item_controller import item_bp
     app.register_blueprint(item_bp)

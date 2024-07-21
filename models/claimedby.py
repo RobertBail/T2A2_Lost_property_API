@@ -15,15 +15,15 @@ class ClaimedBy(db.Model):
 
     #item_id = db.Column(db.Integer, db.ForeignKey("items.id"), nullable=False)
     item_id = db.Column(db.Integer, db.ForeignKey("items.id"))
-    staff_id = db.Column(db.Integer, db.ForeignKey("staffs.id"), nullable=False)
+    staff_id = db.Column(db.Integer, db.ForeignKey("staffs.staff_id"))
     #items = db.relationship("Item", back_populates="claimedby")
     item = db.relationship("Item", back_populates="claimedby")
     staff = db.relationship("Staff", back_populates="claimedby")
    
 class ClaimedBySchema(ma.Schema):
-   id = fields.Int()
-   staff_id = fields.Int()
-   item_id = fields.Int()
+   #id = fields.Integer()
+   staff_id = fields.Integer()
+   item_id = fields.Integer()
 
    item = fields.Nested('ItemSchema', only=["item_name"])
    #item = fields.Nested('ItemSchema', only=["item_id", "item_name"])
@@ -64,6 +64,8 @@ class ClaimedBySchema(ma.Schema):
             "email",
             "address",
             "date_claimed",
+            "item_id",
+            "staff_id"
         )
 
 claimedby_schema = ClaimedBySchema()
