@@ -67,6 +67,6 @@ class ClaimedBySchema(ma.Schema):
             "item_id",
             "staff_id"
         )
-
+        ordered = True
 claimedby_schema = ClaimedBySchema()
 claimedbys_schema = ClaimedBySchema(many=True)

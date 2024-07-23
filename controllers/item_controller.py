@@ -1,35 +1,41 @@
 from datetime import date
 
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from init import db
 from models.item import Item, item_schema, items_schema
 #from controllers.comment_controller import comments_bp
-from controllers.claimedby_controller import claimedby_bp
+#from controllers.claimedby_controller import claimedby_bp
 #from controllers.auth_controller import authorise_as_admin
 #from utils import authorise_as_admin            
             
-item_bp = Blueprint("items", __name__, url_prefix="/items")
-item_bp.register_blueprint(claimedby_bp)            
+item_bp = Blueprint("item", __name__, url_prefix="/item")
+#item_bp.register_blueprint(claimedby_bp)            
 
-@item_bp.route("/") 
-
+@item_bp.route("/", methods=["GET"]) 
 def get_all_items():
-#add desc() ?   
     stmt = db.select(Item).order_by(Item.item_name)
     items = db.session.scalars(stmt)
     return items_schema.dump(items)
+#add desc() ?   
+#    items = Item.query.all()
+    # serialise users into JSON objects based on schema
+#    result = items_schema.dump(items)
+    # return result as a response with successful status code
+#    return jsonify({"items": result}), 200 
+
             
 @item_bp.route("/<int:item_id>")
 def get_one_item(item_id):
-    stmt = db.select(Item).filter_by(item_id=item_id)
+    stmt = db.select(Item).filter_by(id=item_id)
    
     item = db.session.scalar(stmt)
     if item:
         return item_schema.dump(item)
     else:
         return {"error": f"Item with id {item_id} not found"}, 404
+
 
 @item_bp.route("/", methods=["POST"])
 @jwt_required()

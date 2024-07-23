@@ -118,9 +118,9 @@ class ItemSchema(ma.Schema):
             "now_claimed",
             "staffprofile_id",
             "staff_id",
-            "claimedby"
+            
         )
-
+        ordered = True
 
 item_schema = ItemSchema()
 items_schema = ItemSchema(many=True)

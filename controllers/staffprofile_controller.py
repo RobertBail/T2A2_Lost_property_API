@@ -1,31 +1,32 @@
 #from datetime import date
 
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from init import db
-from models.staffprofile import StaffProfile, staffprofile_schema, staffprofiles_schema
+from models.staffprofile import StaffProfile, StaffProfileSchema, staffprofile_schema, staffprofiles_schema
 #from models.staff import Staff
-from controllers.auth_controller import auth_bp
-from controllers.item_controller import item_bp
+#from controllers.auth_controller import auth_bp
+#from controllers.item_controller import item_bp
 #from utils import authorise_as_admin
 
 #staffprofile_bp = Blueprint("claimedby", __name__, url_prefix="/<int:staff_id>/staffprofile")
 staffprofile_bp = Blueprint("staffprofile", __name__, url_prefix="/staffprofile")
-staffprofile_bp.register_blueprint(item_bp) 
+#staffprofile_bp.register_blueprint(item_bp) 
 
 #needed? 
 #def authorise_as_admin(fn):
 
-@staffprofile_bp.route('/')
+@staffprofile_bp.route('/', methods=["GET"])
 def get_all_staffprofiles():
+
     stmt = db.select(StaffProfile).order_by(StaffProfile.StaffName)
     staffprofile = db.session.scalars(stmt)
     return staffprofiles_schema.dump(staffprofile)
 
-@staffprofile_bp.route('/<int:staffprofile_id>')
+@staffprofile_bp.route('/<int:staffprofile_id>', methods=["GET"])
 def get_one_staffprofile(staffprofile_id):
-    stmt = db.select(StaffProfile).filter_by(id=staffprofile_id)
+    stmt = db.select(StaffProfile).filter_by(staffprofile_id=staffprofile_id)
     staffprofile = db.session.scalar(stmt)
     if staffprofile:
         return staffprofile_schema.dump(staffprofile)

@@ -1,18 +1,19 @@
 from datetime import timedelta
 import functools
+import jsonpickle
 
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from sqlalchemy.exc import IntegrityError
 from psycopg2 import errorcodes
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 from init import bcrypt, db
 from models.staff import Staff, StaffSchema, staff_schema, staffs_schema
-#from controllers.staffprofile_controller import staffprofile_bp
+from controllers.staffprofile_controller import staffprofile_bp
 #from utils import auth_as_admin_decorator
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
-#auth_bp.register_blueprint(staffprofile_bp)
+auth_bp.register_blueprint(staffprofile_bp)
 #change __name__ ?
 
 @auth_bp.route("/register", methods=["POST"])
@@ -36,22 +37,22 @@ def register_staff():
         # add and commit to the DB
         db.session.add(staff)
         db.session.commit()
-
+        #staff_schema = jsonpickle.encode(staff)
         # respond back
         return staff_schema.dump(staff), 201
     
     except IntegrityError as err:
         if err.orig.pgcode == errorcodes.NOT_NULL_VIOLATION:
-            return {"error": f"The column {err.orig.diag.column_name} is required"}, 409
+            return jsonify ({"error": f"The column {err.orig.diag.column_name} is required"}), 409
         if err.orig.pgcode == errorcodes.UNIQUE_VIOLATION:
-            return {"error": "Email address already in use"}, 409
+            return jsonify ({"error": "Email address already in use"}), 409
 
 
 @auth_bp.route("/login", methods=["POST"])
 def login_staff():
 
     # Get the data from the request body
-    body_data = request.get_json()
+    body_data = StaffSchema.load(request.get_json())
     #body_data = staff_schema.load(request.get_json())
 
     # Find user with the email address
@@ -60,21 +61,31 @@ def login_staff():
     staff = db.session.scalar(stmt)
 
     # If cannot find user account with email, return account not found error
-    if not staff:
-        return {"error": "Invalid email. Staff member email does not exist"}, 401
-
-    # if given password does not match hashed password in database, return password error
-    if not bcrypt.check_password_hash(
-        staff.staff_password, body_data.get("staff_password")
-    ):
-        return {"error": "Password is incorrect"}, 401
-
-    # Assuming account was found, create JWT
-    token = create_access_token(
-        identity=str(staff.id), expires_delta=timedelta(days=1)
-    )
-    # Return the token along with the user info
-    return {"staff_email": staff.staff_email, "token": token, "is_admin": staff.is_admin}
+    if staff and bcrypt.check_password_hash(
+            staff.staff_password,
+            body_data.get('staff_password')
+            ):
+        # create JWT token for user with expiry set for 7 days
+        token = create_access_token(
+            identity=str(staff.staff_id),
+            expires_delta=timedelta(days=7)
+            )
+        # return user info with token as a JSON response
+        return jsonify(
+            {
+            "staff_email": staff.staff_email,
+            "token": token,
+            "is_admin": staff.is_admin
+            }
+        ), 200
+    # return an error and unauthorised status code
+    # in the case of invalid fields
+    else:
+        return jsonify(
+            {
+                "Error": "Username or password is invalid"
+            }
+        ), 401
 
 
 # Function to check if staff member is an admin (checking the is_admin field)

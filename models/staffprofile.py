@@ -30,8 +30,8 @@ class StaffProfileSchema(ma.Schema):
     #this for "role" also?
 
     class Meta:
-        fields = ("staffprofile_id", "StaffName", "role", "staff_id", "staff", "item")
-    
-
+        fields = ("staffprofile_id", "StaffName", "role", "staff_id",)
+ #        fields = ("staffprofile_id", "StaffName", "role", "staff_id", "staff", "item")   
+        ordered = True
 staffprofile_schema = StaffProfileSchema()
 staffprofiles_schema = StaffProfileSchema(many=True)

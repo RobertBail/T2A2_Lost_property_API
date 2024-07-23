@@ -1,6 +1,6 @@
 from datetime import date
 
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from init import db
@@ -12,15 +12,16 @@ claimedby_bp = Blueprint("claimedby", __name__, url_prefix="/claimedby")
 #claimedby_bp.register_blueprint(item_bp) 
 
 #desc() meaning sort the result in a descending order.
-@claimedby_bp.route('/')
+@claimedby_bp.route('/', methods=["GET"])
 def get_all_claimedbys():
     stmt = db.select(ClaimedBy).order_by(ClaimedBy.name)
     claimedby = db.session.scalars(stmt)
-    return claimedbys_schema.dump(claimedby)
+    return claimedbys_schema.dump(claimedby)  
 
 @claimedby_bp.route('/<int:claimedby_id>')
-def get_one_claimedby(claimedby_id ): 
-    stmt = db.select(ClaimedBy).filter_by(claimedby_id=claimedby_id)
+def get_one_claimedby(claimedby_id):
+
+    stmt = db.select(ClaimedBy).filter_by(id=claimedby_id)
     claimedby = db.session.scalar(stmt)
     if claimedby:
         return claimedby_schema.dump(claimedby)
