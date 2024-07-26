@@ -9,7 +9,7 @@ class StaffProfile(db.Model):
     __tablename__ = "staffprofiles"
 
     staffprofile_id = db.Column(db.Integer, primary_key=True)
-    StaffName = db.Column(db.String, nullable=False)
+    staff_name = db.Column(db.String, nullable=False)
     role = db.Column(db.String)
 
     staff_id = db.Column(db.Integer, db.ForeignKey("staffs.staff_id"), nullable=False)
@@ -22,7 +22,7 @@ class StaffProfileSchema(ma.Schema):
     #or staff
     #staff = fields.Nested('StaffSchema', only=["staff_id", "organisation_name", "staff_email"])
     #staff = fields.Nested('StaffSchema', only=["organisation_name", "staff_email"])
-    StaffName = fields.String(required=True, validate=And(
+    staff_name = fields.String(required=True, validate=And(
         Length(min=2, error="Staff Name must be at least 2 characters long"),
         Regexp("^[a-zA-Z0-9\s\-_.'()! ]+$", error="Staff Name cannot contain special characters such as @, &, #, $, %, *, /, question marks, colons, semicolons, and brackets")
     ))
@@ -30,7 +30,7 @@ class StaffProfileSchema(ma.Schema):
     role = fields.String()
 
     class Meta:
-        fields = ("staffprofile_id", "StaffName", "role", "staff_id",)
+        fields = ("staffprofile_id", "staff_name", "role", "staff_id",)
  #        fields = ("staffprofile_id", "StaffName", "role", "staff_id", "staff", "item")   
         #ordered = True
 staffprofile_schema = StaffProfileSchema()

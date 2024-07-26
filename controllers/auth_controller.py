@@ -63,7 +63,7 @@ def login_staff():
     #body_data = staff_schema.load(request.get_json())
     print("Received JSON:", body_data)    
     # Query for staff member by email
-    stmt = db.session.query(Staff).filter_by(staff_email=body_data.get("staff_email")).first()
+    stmt = db.session.query(Staff).filter_by(staff_email=body_data.get("staff_email"))
     staff = db.session.scalar(stmt)
     if not request.data:
         return jsonify({"error": "Empty request body"}), 400

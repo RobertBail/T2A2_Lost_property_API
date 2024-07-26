@@ -74,7 +74,7 @@ def seed_tables():
     staffprofiles = [
         StaffProfile(
             staffprofile_id=1,
-            StaffName="Admin",
+            staff_name="Admin",
             role="Admin",
             staff_id=1
             #add anything else?  
@@ -82,31 +82,31 @@ def seed_tables():
         ),
         StaffProfile(
             staffprofile_id=2,
-            StaffName="Gerald Simmons",
+            staff_name="Gerald Simmons",
             role="Teacher",
             staff_id=2
         ),
         StaffProfile(
             staffprofile_id=3,
-            StaffName="Julia Brightman",
+            staff_name="Julia Brightman",
             role="Swimming Instructor",
             staff_id=3
         ),
         StaffProfile(
             staffprofile_id=4,
-            StaffName="Anthony Stevens",
+            staff_name="Anthony Stevens",
             role="Personal Trainer",
             staff_id=4
         ),
         StaffProfile(
             staffprofile_id=5,
-            StaffName="Robert S",
+            staff_name="Robert S",
             role="Site Supervisor",
             staff_id=5
         ),
         StaffProfile(
             staffprofile_id=6,
-            StaffName="Anna Fantasia",
+            staff_name="Anna Fantasia",
             role="PE Teacher",
             staff_id=6
         ),

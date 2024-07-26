@@ -20,7 +20,7 @@ staffprofile_bp = Blueprint("staffprofile", __name__, url_prefix="/staffprofile"
 @staffprofile_bp.route('/', methods=["GET"])
 def get_all_staffprofiles():
 
-    stmt = db.select(StaffProfile).order_by(StaffProfile.StaffName)
+    stmt = db.select(StaffProfile).order_by(StaffProfile.staff_name)
     staffprofile = db.session.scalars(stmt)
     return staffprofiles_schema.dump(staffprofile)
 
@@ -41,7 +41,7 @@ def new_staffprofile():
     # Create a new staffprofile model instance
     staffprofile = StaffProfile(
         staffprofile_id=get_jwt_identity(),
-        StaffName = body_data.get("StaffName"),
+        staff_name = body_data.get("staff_name"),
         role = body_data.get("role"),
         staff_id=get_jwt_identity()
     )
@@ -49,7 +49,7 @@ def new_staffprofile():
     db.session.add(staffprofile)
     db.session.commit()
     # return the newly created staffprofile
-    return staffprofile_schema.dump(staffprofile)
+    return staffprofile_schema.dump(staffprofile), 201
 
 @staffprofile_bp.route('/<int:staffprofile_id>', methods=["DELETE"])
 @jwt_required()
@@ -68,7 +68,7 @@ def delete_staffprofile(staffprofile_id):
         db.session.delete(staffprofile)
         db.session.commit()
         # return msg
-        return {'message': f"Staff Profile '{staffprofile.StaffName}' deleted successfully"}
+        return {'message': f"Staff Profile '{staffprofile.staff_name}' deleted successfully"}
     # else
     else:
         # return error msg
@@ -87,7 +87,7 @@ def update_staffprofile(staffprofile_id):
         if str(staffprofile.staff_id) != get_jwt_identity():
             return {"error": "Only authorised staff members can edit these details"}, 403
         # update the fields
-        staffprofile.StaffName = body_data.get("StaffName") or staffprofile.StaffName
+        staffprofile.staff_name = body_data.get("staff_name") or staffprofile.staff_name
         staffprofile.role = body_data.get("role") or staffprofile.role
         # commit the changes
         db.session.commit()
