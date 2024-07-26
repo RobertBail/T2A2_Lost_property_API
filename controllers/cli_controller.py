@@ -36,30 +36,36 @@ def seed_tables():
     # create a list of Staff instances
     staffs = [
         Staff(
-            staff_id=1,
-            organisation_name="Nick's Gym",
+            organisation_name="NicksGym",
             staff_email="admin@email.com",
-            staff_password=bcrypt.generate_password_hash("test1pw%").decode("utf-8"),
+            staff_password=bcrypt.generate_password_hash("123456").decode("utf-8"),
             is_admin=True,
         ),
-        Staff(
-            staff_id=2,
-            organisation_name="Nick's Gym",
+        Staff(           
+            organisation_name="NicksGym",
             staff_email="Geraldsimmons1@nicks.com",
-            staff_password=bcrypt.generate_password_hash("staff1pw!").decode("utf-8"),
+            staff_password=bcrypt.generate_password_hash("123456").decode("utf-8"),
         ),
-        Staff(
-            staff_id=3,
-            organisation_name="Nick's Gym",
+        Staff(           
+            organisation_name="NicksGym",
             staff_email="Julia1staff2@nicks.com",
-            staff_password=bcrypt.generate_password_hash("staff2pw#").decode("utf-8"),
+            staff_password=bcrypt.generate_password_hash("123456").decode("utf-8"),
         ),
-        Staff(
-            staff_id=4,
-            organisation_name="Nick's Gym",
+        Staff(            
+            organisation_name="NicksGym",
             staff_email="AnthonyS3staff@nicks.com",
-            staff_password=bcrypt.generate_password_hash("Julia3staffPW$").decode("utf-8"),
-        )
+            staff_password=bcrypt.generate_password_hash("123456").decode("utf-8"),
+        ),
+        Staff(           
+            organisation_name="MarvelStadium",
+            staff_email="RobertSstaff@marvelstadium.com",
+            staff_password=bcrypt.generate_password_hash("123456").decode("utf-8"),
+        ),
+        Staff(            
+            organisation_name="SmithHighSschool",
+            staff_email="AnnaFantasia@smithigh.com",
+            staff_password=bcrypt.generate_password_hash("123456").decode("utf-8"),
+        )               
     ]
 
     db.session.add_all(staffs)
@@ -82,7 +88,7 @@ def seed_tables():
         ),
         StaffProfile(
             staffprofile_id=3,
-            StaffName="Julia Burns",
+            StaffName="Julia Brightman",
             role="Swimming Instructor",
             staff_id=3
         ),
@@ -91,23 +97,34 @@ def seed_tables():
             StaffName="Anthony Stevens",
             role="Personal Trainer",
             staff_id=4
-        )
+        ),
+        StaffProfile(
+            staffprofile_id=5,
+            StaffName="Robert S",
+            role="Site Supervisor",
+            staff_id=5
+        ),
+        StaffProfile(
+            staffprofile_id=6,
+            StaffName="Anna Fantasia",
+            role="PE Teacher",
+            staff_id=6
+        ),
     ]
 
     db.session.add_all(staffprofiles)
 
     items = [
         Item(
-            item_name="Adidas T-Shirt",
+            item_name="Adidas T Shirt",
             description="black and white large",
             quantity="1",
             date_found=date.today(),
-            time_found ="4:00PM",
-            #staff/user enters time manually
+            time_found ="4PM",
             location_found="locker room under bench",
             now_claimed="Yes",
-            staffprofile_id=1,
-            staff_id=1
+            staffprofile_id=2,
+            staff_id=2
             # id? or relationship?
         ),
          Item(
@@ -115,7 +132,7 @@ def seed_tables():
             description="blue Cotinga 30L",
             quantity="1",
             date_found=date.today(),
-            time_found ="2:00PM",
+            time_found ="2PM",
             location_found="next to bins",
             now_claimed="Yes",
             staffprofile_id=2,
@@ -127,8 +144,44 @@ def seed_tables():
             description="gold hoops",
             quantity="2",
             date_found=date.today(),
-            time_found ="10:00AM",
+            time_found ="10AM",
             location_found="locker room shower",
+            now_claimed="No",
+            staffprofile_id=3,
+            staff_id=3
+            # id?
+        ),
+         Item(
+            item_name="Adidas drink bottles",
+            description="blue and white 750ml",
+            quantity="3",
+            date_found=date.today(),
+            time_found ="3PM",
+            location_found="under chairs in hallway",
+            now_claimed="Yes",
+            staffprofile_id=2,
+            staff_id=2
+            # id?
+        ),
+         Item(
+            item_name="iPhones",
+            description="2 light blue and 2 white",
+            quantity="4",
+            date_found=date.today(),
+            time_found ="810AM",
+            location_found="Jonnys bar under table two",
+            now_claimed="No",
+            staffprofile_id=2,
+            staff_id=2
+            # id?
+        ),
+         Item(
+            item_name="Test item",
+            description="black and white",
+            quantity="1",
+            date_found=date.today(),
+            time_found ="930AM",
+            location_found="Locker room",
             now_claimed="No",
             staffprofile_id=3,
             staff_id=3
@@ -137,42 +190,58 @@ def seed_tables():
     ]
 
     db.session.add_all(items)
- 
+ #information to know who collected the item and when, eg. in case of mix-ups, theft even perhaps 
     claimedbys = [
-        ClaimedBy(
-    #information to know who collected the item and when, eg. in case of mix-ups, theft even perhaps
+        ClaimedBy(  
             name="Tim Johnson",
             phone="0200010110",
             email="tjohnson100@aol.com",
             address="222 Bank St Sydney",
             date_claimed=date.today(),
-            staff_id=1,
-            item_id=1,
-        #reference items id?
-        #reference staff id?
+            item_id=2,
+            staff_id=2,
+            
         ),
         ClaimedBy(
             name="Samantha Gold",
             phone="0600050110",
             email="sgold33@gmail.com",
-            address="444 Smith St Mascot",
+            address="445 Smith St Mascot",
             date_claimed=date.today(),
+            item_id=3,
             staff_id=2,
-            item_id=2,
-            
-        #reference items id?
-        #reference staff id?
+                        
         ),
-        #ClaimedBy(
-        #    name="Larry Field",
-        #    phone="0770090110",
-        #    email="larryfield777@yahoo.com",
-        #    address="999 Jones Tce Smithfield",
-        #    date_claimed=date.today(),
-        #    item=items[2],
-        #reference items id?
-        #reference staff id?
-       # ),
+        ClaimedBy(
+            name="Larry Field",
+            phone="0770090110",
+            email="larryfield777@yahoo.com",
+            address="999 Jones Tce Smithfield",
+            date_claimed=date.today(),
+            item_id=4,
+            staff_id=4,
+            
+        ),
+        ClaimedBy(
+            name="John Candy",
+            phone="0990030444",
+            email="candyman737@yahoo.com",
+            address="1011 Tristar Tce Greenacres",
+            date_claimed=date.today(),
+            item_id=5,
+            staff_id=4,
+            
+        ),
+        ClaimedBy(
+            name="Test Person",
+            phone="0956730544",
+            email="candyman757@yahoo.com",
+            address="1015 Tristar Tce Greenacres",
+            date_claimed=date.today(),
+            item_id=5,
+            staff_id=4,
+            
+        ),          
     ]
 
     db.session.add_all(claimedbys)

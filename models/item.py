@@ -44,7 +44,7 @@ class ItemSchema(ma.Schema):
     #staff = fields.Nested('StaffSchema', only=["staff_id", "organisation_name", "staff_email"])
     #claimedby = fields.Nested('ClaimedBySchema', only=["claimedby_id", "name"])
 
-    item_id = fields.Integer()
+    #item_id = fields.Integer()
     item_name = fields.String(
         required=True,
         validate=And(
@@ -72,6 +72,7 @@ class ItemSchema(ma.Schema):
             ),
         ),
     )
+    time_found = fields.String()
    # date_found = fields.Date(
    #     format="%Y-%m-%d",
    #     error_messages={"error": "Invalid date format. Use YYYY-MM-DD."},

@@ -4,6 +4,7 @@ import jsonpickle
 
 from flask import Blueprint, request, jsonify
 from sqlalchemy.exc import IntegrityError
+from marshmallow.exceptions import ValidationError
 from psycopg2 import errorcodes
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
@@ -13,19 +14,20 @@ from controllers.staffprofile_controller import staffprofile_bp
 #from utils import auth_as_admin_decorator
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
-auth_bp.register_blueprint(staffprofile_bp)
+#auth_bp.register_blueprint(staffprofile_bp)
 #change __name__ ?
 
 @auth_bp.route("/register", methods=["POST"])
 def register_staff():
     try:
         # get the data from the body of the request
-        body_data = StaffSchema.load(request.get_json())
-
+        body_data = staff_schema.load(request.get_json())
+        #partial=true
         # create an instance of the Staff model
         staff = Staff(
            organisation_name=body_data.get("organisation_name"),
-           staff_email=body_data.get("staff_email")
+           staff_email=body_data.get("staff_email"),
+           
         )
         # extract the password from the body
         staff_password = body_data.get("staff_password")
@@ -41,61 +43,55 @@ def register_staff():
         # respond back
         return staff_schema.dump(staff), 201
     
+    except ValidationError as ve:
+        # Handle Marshmallow validation errors
+        return {"error": ve.messages}, 400
+        
     except IntegrityError as err:
         if err.orig.pgcode == errorcodes.NOT_NULL_VIOLATION:
             return jsonify ({"error": f"The column {err.orig.diag.column_name} is required"}), 409
         if err.orig.pgcode == errorcodes.UNIQUE_VIOLATION:
-            return jsonify ({"error": "Email address already in use"}), 409
+            return jsonify ({"error": "Email address is already in use"}), 409
+    except Exception as e:
+        # Handle any other unexpected errors
+        return {"error": str(e)}, 500
 
 
 @auth_bp.route("/login", methods=["POST"])
 def login_staff():
-
-    # Get the data from the request body
-    body_data = StaffSchema.load(request.get_json())
+    body_data = staff_schema.load(request.get_json())
     #body_data = staff_schema.load(request.get_json())
-
-    # Find user with the email address
-    # SELECT * FROM users WHERE email = 'user_email_here';
-    stmt = db.select(Staff).filter_by(staff_email=body_data.get("staff_email"))
+    print("Received JSON:", body_data)    
+    # Query for staff member by email
+    stmt = db.session.query(Staff).filter_by(staff_email=body_data.get("staff_email")).first()
     staff = db.session.scalar(stmt)
+    if not request.data:
+        return jsonify({"error": "Empty request body"}), 400
 
-    # If cannot find user account with email, return account not found error
-    if staff and bcrypt.check_password_hash(
-            staff.staff_password,
-            body_data.get('staff_password')
-            ):
-        # create JWT token for user with expiry set for 7 days
-        token = create_access_token(
-            identity=str(staff.staff_id),
-            expires_delta=timedelta(days=7)
-            )
-        # return user info with token as a JSON response
-        return jsonify(
-            {
-            "staff_email": staff.staff_email,
-            "token": token,
-            "is_admin": staff.is_admin
-            }
-        ), 200
-    # return an error and unauthorised status code
-    # in the case of invalid fields
-    else:
-        return jsonify(
-            {
-                "Error": "Username or password is invalid"
-            }
-        ), 401
+    if not staff:
+        return {"error": "Invalid email. Staff member does not exist"}, 401
 
+    # if given password does not match hashed password in database, return password error
+    if not bcrypt.check_password_hash(
+        staff.staff_password, body_data.get("staff_password")
+    ):
+        return {"error": "Password is incorrect"}, 401
+
+    # Assuming account was found, create JWT
+    token = create_access_token(
+        identity=str(staff.staff_id), expires_delta=timedelta(days=3)
+    )
+    # Return the token along with the user info
+    return jsonify({"staff_email": staff.staff_email, "token": token, "is_admin": staff.is_admin})
 
 # Function to check if staff member is an admin (checking the is_admin field)
 def is_staff_admin():
 
-    # Get user_id from the JWT token
+    # Get staff_id from the JWT token
     staff_id = int(get_jwt_identity())
 
-    # Find the user record with the user_id
-    # SELECT * FROM users where user_id = jwt_user_id
+    # Find the staff record with the staff_id
+    # SELECT * FROM staff where staff_id = jwt_staff_id
     stmt = db.select(Staff).filter_by(staff_id=staff_id)
     staff = db.session.scalar(stmt)
 
@@ -146,15 +142,32 @@ def authorise_as_admin(fn):
 
     return wrapper
 
+@auth_bp.route("/", methods=["GET"]) 
+def get_all_staff():
+    stmt = db.select(Staff).order_by(Staff.staff_id)
+    staff_members = db.session.scalars(stmt)
+    return staffs_schema.dump(staff_members)
+            
+@auth_bp.route("/staff/<int:staff_id>")
+def get_one_staff(staff_id):
+    stmt = db.select(Staff).filter_by(staff_id=staff_id)
+   
+    staff_member = db.session.scalar(stmt)
+    if staff_member:
+        return staff_schema.dump(staff_member)
+    else:
+        return {"error": f"Staff member with id {staff_id} not found"}, 404
+
     #Update staff here?
     #Delete staff here?
+            #"/staff/<int:staff_id>"
 @auth_bp.route("/staff", methods=["PUT", "PATCH"])
 @jwt_required()
 @authorise_as_admin
 def update_staff():
     # get the fields from body of the request
     body_data = staff_schema.load(request.get_json(), partial=True)
-    staff_password = body_data.get("staff_password")
+    password = body_data.get("password")
     # add staff_email ?
     # fetch the staff member from the db
     stmt = db.select(Staff).filter_by(staff_id=get_jwt_identity())
@@ -169,8 +182,8 @@ def update_staff():
         staff.organisation_name = body_data.get("organisation_name") or staff.organisation_name
         staff.staff_email=body_data.get("staff_email") or staff.staff_email
         # user.password = <hashed-password> or user.password
-        if staff_password:
-            staff.staff_password = bcrypt.generate_password_hash(staff_password).decode("utf-8")
+        if password:
+            staff.password = bcrypt.generate_password_hash(password).decode("utf-8")
         # commit to the DB
         db.session.commit()
         # return a response

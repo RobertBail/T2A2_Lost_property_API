@@ -11,6 +11,7 @@ from models.item import Item, item_schema, items_schema
 #from utils import authorise_as_admin            
             
 item_bp = Blueprint("item", __name__, url_prefix="/item")
+                #or items?
 #item_bp.register_blueprint(claimedby_bp)            
 
 @item_bp.route("/", methods=["GET"]) 
@@ -50,9 +51,10 @@ def new_item():
         date_found=date.today(),
         time_found=body_data.get("time_found"),
         location_found=body_data.get("location_found"),
-        now_claimed=body_data.get("now_claimed"), 
+        now_claimed=body_data.get("now_claimed"),
+        staffprofile_id=get_jwt_identity(),         
         staff_id=get_jwt_identity(),
-        staffprofile_id=get_jwt_identity()
+
     )
     # add and commit to DB
     db.session.add(item)
@@ -65,7 +67,7 @@ def new_item():
 #@authorise_as_admin  # is_admin = True
 def delete_item(item_id):
 
-    stmt = db.select(Item).filter_by(item_id=item_id)
+    stmt = db.select(Item).filter_by(id=item_id)
     item = db.session.scalar(stmt)
 
     # If item record exists, delete the item from the session and commit
@@ -92,7 +94,7 @@ def update_item(item_id):
     # Get the item data to be updated from the body of the request
     body_data = item_schema.load(request.get_json(), partial=True)
 
-    stmt = db.select(Item).filter_by(item_id=item_id)
+    stmt = db.select(Item).filter_by(id=item_id)
     item = db.session.scalar(stmt)
 
     # If item record exists, update the specified fields

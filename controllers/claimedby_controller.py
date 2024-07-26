@@ -39,7 +39,8 @@ def new_claimedby():
         email = body_data.get('email'),
         address = body_data.get('address'),
         date_claimed = date.today(),
-        item_id = get_jwt_identity()
+        item_id = get_jwt_identity(),
+        staff_id = get_jwt_identity()
     )
     # Add that to the session and commit
     db.session.add(claimedby)
@@ -48,10 +49,10 @@ def new_claimedby():
     return claimedby_schema.dump(claimedby), 201
 
 @claimedby_bp.route("/<int:claimedby_id>", methods=["DELETE"])
-@jwt_required()
+#@jwt_required()
 def delete_claimedby(claimedby_id):
     
-    stmt = db.select(ClaimedBy).filter_by(claimedby_id=claimedby_id)
+    stmt = db.select(ClaimedBy).filter_by(id=claimedby_id)
     claimedby = db.session.scalar(stmt)
     # if claimedby exists
     if claimedby:
@@ -66,12 +67,12 @@ def delete_claimedby(claimedby_id):
         return {"error": f"Claimedby with id {claimedby_id} not found"}, 404
 
 @claimedby_bp.route("/<int:claimedby_id>", methods=["PUT", "PATCH"])
-@jwt_required()
+#@jwt_required()
 def update_claimedby(claimedby_id):
     # get the data from the body of the request
     body_data = claimedby_schema.load(request.get_json(), partial=True)
     # get the claimedby from the database
-    stmt = db.select(ClaimedBy).filter_by(claimedby_id=claimedby_id)
+    stmt = db.select(ClaimedBy).filter_by(id=claimedby_id)
     claimedby = db.session.scalar(stmt)
     # if claimedby exists
     if claimedby:

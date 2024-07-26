@@ -11,7 +11,7 @@ class Staff(db.Model):
 
     # attributes of the table
     staff_id = db.Column(db.Integer, primary_key=True)
-    organisation_name = db.Column(db.String, nullable=False)
+    organisation_name = db.Column(db.String)
     staff_email = db.Column(db.String, nullable=False, unique=True)
     staff_password = db.Column(db.String, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
@@ -29,7 +29,7 @@ class StaffSchema(ma.Schema):
     #item = fields.Nested("ItemSchema", only=["item_id", "item_name"])
     #enteredby = fields.Nested("EnteredBySchema", exclude=["enteredby_id"])
    
-    organisation_name = fields.String(required=True, validate=And(
+    organisation_name = fields.String(validate=And(
             Length(min=2,
                    error="Organisation name must have a length of at least 2 characters"),
             Regexp("^[a-zA-Z0-9\s\-_.'()! ]+$",
@@ -38,16 +38,16 @@ class StaffSchema(ma.Schema):
     )
     staff_email = fields.String(required=True, validate=Regexp("^\S+@\S+\.\S+$", error="Invalid Email Format"))
 
-    staff_password  = fields.String(
+    staff_password = fields.String(
             required=True,
-            validate=And(
+            validate=(
             Length(
                 min=6, error="Password must be at least 6 characters long."
             ),
-            Regexp(
-                "^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$",
-                error="Password must include at least one letter, one number, and one special character.",
-            ),
+            #Regexp(
+            #    "[a-zA-Z0-9_.-]+$^",
+            #    error="Password must be unspaced and contain valid characters.",
+            #),
         ),
     #       load_only=True,
     )
@@ -58,14 +58,12 @@ class StaffSchema(ma.Schema):
                   "staff_email", 
                   "staff_password", 
                   "is_admin", 
-                  "item",
-                  "staffprofile",
-                  "claimedby"
+
                   )
 
 
 # to handle a single staff object
-staff_schema = StaffSchema(exclude=["staff_password"])
+staff_schema = StaffSchema()
 
 # to handle a list of staff objects
 staffs_schema = StaffSchema(many=True, exclude=["staff_password"])

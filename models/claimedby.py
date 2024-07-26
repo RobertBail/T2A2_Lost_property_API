@@ -42,14 +42,14 @@ class ClaimedBySchema(ma.Schema):
             ),
         ),
     )
-   phone = fields.Integer(
-        required=True,
-        validate=Range(
-            min=6,
-            max=10,
-            error="Phone number must be minimum 6 and maximum 10 numbers",
-        ),
-    )
+   #phone = fields.Integer(
+    #    required=True,
+    #    validate=Range(
+    #        min=6,
+    #        max=10,
+    #        error="Phone number must be minimum 6 and maximum 10 numbers",
+    #    ),
+    #)
        
 #need required=True here?
    email = fields.String(required=True, validate=Regexp("^\S+@\S+\.\S+$", error="Invalid Email Format"))

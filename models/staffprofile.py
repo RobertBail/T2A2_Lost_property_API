@@ -17,8 +17,8 @@ class StaffProfile(db.Model):
     item = db.relationship("Item", back_populates="staffprofile")
 
 class StaffProfileSchema(ma.Schema):
-    #id = fields.Int()
-    id = fields.Integer()
+    staff_id = fields.Int()
+    #staffprofile_id = fields.Integer()
     #or staff
     #staff = fields.Nested('StaffSchema', only=["staff_id", "organisation_name", "staff_email"])
     #staff = fields.Nested('StaffSchema', only=["organisation_name", "staff_email"])
@@ -27,11 +27,11 @@ class StaffProfileSchema(ma.Schema):
         Regexp("^[a-zA-Z0-9\s\-_.'()! ]+$", error="Staff Name cannot contain special characters such as @, &, #, $, %, *, /, question marks, colons, semicolons, and brackets")
     ))
     # StaffName can have hyphen ‐  ?
-    #this for "role" also?
+    role = fields.String()
 
     class Meta:
         fields = ("staffprofile_id", "StaffName", "role", "staff_id",)
  #        fields = ("staffprofile_id", "StaffName", "role", "staff_id", "staff", "item")   
-        ordered = True
+        #ordered = True
 staffprofile_schema = StaffProfileSchema()
 staffprofiles_schema = StaffProfileSchema(many=True)

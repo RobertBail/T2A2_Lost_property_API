@@ -40,6 +40,7 @@ def new_staffprofile():
     body_data = staffprofile_schema.load(request.get_json())
     # Create a new staffprofile model instance
     staffprofile = StaffProfile(
+        staffprofile_id=get_jwt_identity(),
         StaffName = body_data.get("StaffName"),
         role = body_data.get("role"),
         staff_id=get_jwt_identity()
@@ -48,14 +49,14 @@ def new_staffprofile():
     db.session.add(staffprofile)
     db.session.commit()
     # return the newly created staffprofile
-    return staffprofile_schema.dump(staffprofile), 201
+    return staffprofile_schema.dump(staffprofile)
 
 @staffprofile_bp.route('/<int:staffprofile_id>', methods=["DELETE"])
 @jwt_required()
 #@authorise_as_admin
 def delete_staffprofile(staffprofile_id):
 
-    stmt = db.select(StaffProfile).filter_by(id=staffprofile_id)
+    stmt = db.select(StaffProfile).filter_by(staffprofile_id=staffprofile_id)
     staffprofile = db.session.scalar(stmt)
     # if staffprofile exists
     if staffprofile:
@@ -79,7 +80,7 @@ def update_staffprofile(staffprofile_id):
     # Get the data to be updated from the body of the request
     body_data = staffprofile_schema.load(request.get_json(), partial=True)
     # get the staffprofile from the db whose fields need to be updated
-    stmt = db.select(StaffProfile).filter_by(id=staffprofile_id)
+    stmt = db.select(StaffProfile).filter_by(staffprofile_id=staffprofile_id)
     staffprofile = db.session.scalar(stmt)
     # if staffprofile exists
     if staffprofile:

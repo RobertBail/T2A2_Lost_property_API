@@ -2,6 +2,7 @@ import os
 
 from flask import Flask
 from marshmallow.exceptions import ValidationError
+from sqlalchemy.exc import IntegrityError
 
 from init import db, ma, bcrypt, jwt, migrate
 
@@ -22,13 +23,17 @@ def create_app():
     jwt.init_app(app)
     migrate.init_app(app,db)
 
-    @app.errorhandler(ValidationError)
-    def validation_error(err):
-        return {"error": err.messages}, 400
-    
     @app.errorhandler(400)
     def bad_request(err):
-        return {"error": err.messages}, 400
+        return {"error": str(err)}, 400
+    
+    @app.errorhandler(404)
+    def not_found(err):
+        return {"error": str(err)}, 404
+
+    @app.errorhandler(ValidationError)
+    def validation_error(error):
+        return {"error": error.messages}, 400
     
     @app.errorhandler(401)
     def unauthenticated():
