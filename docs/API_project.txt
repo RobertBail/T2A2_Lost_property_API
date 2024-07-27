@@ -1,0 +1,1154 @@
+https://github.com/RAbeyrathna/T2A2-Game-Library-API
+https://github.com/boldybread/final_movie_api
+https://github.com/BrettRussell96/OMDb_API_Webserver
+
+T2A2_Lost_property_API
+
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql+psycopg2://trello_dev:123456@localhost:5432/trello_db"
+
+DATABASE_URI="postgresql+psycopg2://movie_dev:123456@localhost:5432/movie_db"
+
+flask db seed
+
+postgresql+psycopg2://robertb_dev:123456@localhost:5432/lost_propertydb
+only lowercase?
+
+DATABASE_URI="postgresql+psycopg2://{your_postgres_user}:{passowrd_of_user}@localhost:5432/{your_database}"
+JWT_SECRET_KEY="secret"
+OMDB_API_KEY={your_api_key}
+
+python3 -m venv .venv && source .venv/bin/activate
+python3 -m venv .venv && source venv/bin/activate
+
+
+pip install python-dotenv
+
+
+CREATE DATABASE example_db;
+CREATE DATABASE lost_propertydb;
+
+CREATE USER RobertB_dev WITH PASSWORD '123456';
+
+ALTER USER RobertB_dev WITH PASSWORD '123456';
+
+CREATE RULE
+CREATE ROLE
+
+GRANT ALL PRIVILEGES ON DATABASE example_db TO example_dev;
+GRANT ALL PRIVILEGES ON DATABASE lost_propertydb TO robertb_dev;
+CREATE ROLE RobertB_dev && GRANT ALL ON lost_propertydb TO RobertB_dev;
+CREATE ROLE RobertB_dev & GRANT ALL ON lost_propertydb TO RobertB_dev;
+CREATE ROLE RobertB_dev;
+GRANT
+
+
+DROP TABLE IF EXISTS staff CASCADE;
+DROP TABLE IF EXISTS claimedby CASCADE;
+DROP TABLE IF EXISTS claimedbys CASCADE;
+DROP TABLE IF EXISTS staffprofiles CASCADE;
+
+\c lost_propertydb
+(to connect to database as user)
+
+\dt
+see list of tables in connected database
+
+(singular or plural for table name eg. user or users)
+CREATE TABLE users(
+id SERIAL PRIMARY KEY,
+name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE staffs(
+staff_id SERIAL PRIMARY KEY,
+organisation_name VARCHAR(100) NOT NULL,
+staff_email VARCHAR(100) NOT NULL,
+staff_password VARCHAR(100) NOT NULL
+);
+
+
+CREATE TABLE staffs (
+    staff_id SERIAL PRIMARY KEY,
+    organisation_name VARCHAR NOT NULL,
+    staff_email VARCHAR NOT NULL UNIQUE,
+    staff_password VARCHAR NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE
+);
+
+
+CREATE TABLE staffprofiles (
+    id SERIAL PRIMARY KEY,
+    StaffName VARCHAR(100),
+    role VARCHAR(100),
+    staff_id INTEGER
+);
+
+CREATE TABLE items (
+    id SERIAL PRIMARY KEY,
+    item_name VARCHAR,
+    description VARCHAR,
+    quantity INTEGER,
+    date_found DATE,
+    time_found VARCHAR,
+    location_found VARCHAR,
+    now_claimed VARCHAR,
+    staffprofile_id INTEGER NOT NULL,
+    staff_id INTEGER NOT NULL,
+    FOREIGN KEY (staffprofile_id) REFERENCES staffprofiles(id),
+    FOREIGN KEY (staff_id) REFERENCES staffs(staff_id)
+);
+
+
+CREATE TABLE claimedbys (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR,
+    phone INTEGER,
+    email VARCHAR UNIQUE,
+    address VARCHAR,
+    date_claimed DATE,
+    item_id INTEGER REFERENCES items(id),
+    staff_id INTEGER REFERENCES staffs(staff_id)
+);
+
+
+
+(VARCHAR is variable characters)
+
+\d users
+(to see table)
+
+(Create)
+INSERT INTO users (name) VALUES ('Jim Smith'), ('Tom Warner');
+
+(Read)
+SELECT * FROM users;
+
+ALTER TABLE users ADD COLUMN address VARCHAR(100);
+
+
+python3 -m venv venv && source venv/bin/activate
+
+No module named flask
+
+T2A2_Lost_property_API
+
+apt install python3-flask
+sudo -i -u postgres
+sudo -u postgres psql
+createdb mydb
+sudo -u postgres createuser --interactive
+su - postgres
+sudo passwd postgres
+rpbail211
+psql --version
+sudo apt-get upgrade
+psql --version
+sudo vi pg_hba.conf
+wsl.exe
+psql mydb
+\q
+sudo service postgresql stop
+
+
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')
+
+
+
+
+python3 -m venv venv && source .venv/bin/activate
+Install requirements:
+pip3 install -r requirements.txt
+Create/seed tables:
+python3 -m flask db drop && python3 -m flask db create && python3 -m flask db seed
+Run flask app:
+python3 -m flask run
+
+pip install --force-reinstall -v "Flask-Migrate==4.0.7"
+
+flask --app main:create_app init-db
+flask --app main:create_app db init
+python -m flask --app T2A2_Lost_property_API init-db
+main:create_app
+
+Run python3 -m venv venv
+Run source venv/bin/activate
+Run pip3 install -r requirements.txt to install the required modules
+Create a database table and database user to associate to this API in PostgreSQL
+Create a .env file according to the .envsample and add your own SECRET KEY and database URI
+Run flask db init to intialise the database and create the tables
+Run flask db seed to get the default seed data for the database
+Run flask run to start the flask server on http://localhost:8080
+
+A general utility script for Flask applications.
+
+  An application to load must be given with the '--app' option, 'FLASK_APP'
+  environment variable, or with a 'wsgi.py' or 'app.py' file in the current
+  directory.
+
+Options:
+  -e, --env-file FILE   Load environment variables from this file. python-
+                        dotenv must be installed.
+  -A, --app IMPORT      The Flask application or factory function to load, in
+                        the form 'module:name'. Module can be a dotted import
+                        or file path. Name is not required if it is 'app',
+                        'application', 'create_app', or 'make_app', and can be
+                        'name(args)' to pass arguments.
+  --debug / --no-debug  Set debug mode.
+  --version             Show the Flask version.
+  --help                Show this message and exit.
+
+Commands:
+  db
+  routes  Show the routes for the app.
+  run     Run a development server.
+  shell   Run a shell in the app context.
+
+
+lost_propertydb
+
+lost property API, keep track of lost property, eg. in a large, busy school, gym, sports stadium, or other workplaces, which can be accessed only by staff of that school or organisation
+
+Staff:
+
+staff_id PK
+FirstName
+LastName
+staff_email
+staff_role
+password
+
+
+Item:
+
+item_id PK
+item_name
+description
+quantity
+date_found
+staff_id FK
+
+Found_By:
+(might be important to know who last saw it and when, and hence when the owner left it approximately, and so the owner can say "yes that would be mine", or if someone accidently took it home, eg.)
+FirstName
+LastName
+email
+phone
+role
+date
+time
+item_id FK
+
+
+Item_Claimed:
+
+item_claimed_id PK
+item_id FK
+date_claimed
+
+
+Claimed_by:
+
+claimed_by_id PK
+FirstName
+LastName
+Phone
+Email
+item_claimed_id
+staff_id FK
+
+
+staff_id relating to staff member login/access (as I understand it?)
+
+
+TaylorHalliday1
+
+from datetime import date, time
+from pytz import timezone
+
+local_timezone = timezone('Australia/Sydney')  # Replace with your timezone
+
+# Get current time in the specified timezone
+#current_time = datetime.now(local_timezone)
+# For working with timezones (optional but recommended)
+#I was seeing if there is a way to record or set the user/staff member's current time of entry, according to their timezone
+
+from pytz import timezone
+
+# Specify your local timezone here
+local_timezone = timezone('America/New_York')  # Replace with your timezone
+
+# Get current time in the specified timezone
+current_time = datetime.now(local_timezone)
+
+from flask import Flask, render_template
+from datetime import datetime
+import pytz
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    local_timezone = pytz.timezone('America/New_York')
+    current_time = datetime.now(local_timezone)
+    return render_template('index.html', current_time=current_time)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+
+import time
+
+t = time.localtime()
+current_time = time.strftime("%H:%M:%S", t)
+print(current_time)
+
+
+@auth_bp.route("/login", methods=["POST"])
+def login_staff():
+    # get the data from the body of the request
+    body_data = request.get_json()
+    # find the staff member in DB with that email address
+    stmt = db.select(Staff).filter_by(staff_email=body_data.get("staff_email"))
+    staff = db.session.scalar(stmt)
+    # if staff member exists and password is correct
+    if staff and bcrypt.check_password_hash(staff.password, body_data.get("staff_password")):
+        # create jwt
+        token = create_access_token(identity=str(staff.id), expires_delta=timedelta(days=1))
+        # respond back
+        return {"staff_email": staff.staff_email, "is_admin": staff.is_admin, "token": token}
+    
+    # else
+    else:
+        # respond back with an error message
+        return {"error": "Invalid email or password"}, 401
+    
+# /auth/users
+# /auth/staff
+@auth_bp.route("/staff", methods=["PUT", "PATCH"])
+@jwt_required()
+def update_staff():
+    # get the fields from body of the request
+    body_data = StaffSchema().load(request.get_json(), partial=True)
+    staff_password = body_data.get("staff_password")
+    # fetch the user from the db
+    stmt = db.select(Staff).filter_by(id=get_jwt_identity())
+    staff = db.session.scalar(stmt)
+    # if user exists
+    if staff:
+        # update the fields
+        staff.organisation_name = body_data.get("organisation_name") or staff.organisation_name
+        # user.password = <hashed-password> or user.password
+        if staff_password:
+            staff.staff_password = bcrypt.generate_password_hash(staff_password).decode("utf-8")
+        # commit to the DB
+        db.session.commit()
+        # return a response
+        return staff_schema.dump(staff)
+    # else
+    else:
+        # return an error
+        return {"error": "Staff member does not exist"}
+
+# /auth/users/user_id - DELETE
+@auth_bp.route("/staff/<int:staff_id>", methods=["DELETE"])
+@jwt_required()
+@auth_as_admin_decorator
+def delete_staff(staff_id):
+    # find the user with the id from DB
+    stmt = db.select(Staff).filter_by(id=staff_id)
+    staff = db.session.scalar(stmt)
+    # if user exists
+    if staff:
+        # delete the user
+        db.session.delete(staff)
+        db.session.commit()
+        # return a message
+        return {"message": f"Staff member with id {staff_id} deleted"}
+    # else
+    else:
+        # return error saying user does not exist
+        return {"error": f"Staff member with id {staff_id} not found"}, 4
+
+
+   owner_enquiry = fields.String(validate=OneOf(VALID_STATUSES, error="Invalid option or entry"))
+   #owner_enquiry  = fields.String(validate=OneOf(VALID_STATUSES))
+
+# @validates("owner_enquiry") needed?
+    @validates("owner_enquiry")
+    def validate_status(self, value):
+        # if trying to set the value of status as "Ongoing"
+        if value == VALID_STATUSES[1]:
+            # check whether an existing Ongoing card exists or not
+            stmt = db.select(db.func.count()).select_from(Item).filter_by(status=VALID_STATUSES[1])
+            count = db.session.scalar(stmt)
+            # if it exists
+            if count > 0:
+                # throw error
+                raise ValidationError("Invalid option or entry")
+
+^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$
+
+hyphen ‐
+
+
+from sqlalchemy.orm import registry
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+# Create a registry
+mapper_registry = registry()
+
+# Import and register your models
+from your_module import Item, EnteredBy, Staff
+
+# Bind models to the registry
+mapper_registry.map_imperatively(Item, ...)
+mapper_registry.map_imperatively(EnteredBy, ...)
+mapper_registry.map_imperatively(Staff, ...)
+
+# Configure the registry
+mapper_registry.configure()
+
+
+def authorise_as_admin(fn):
+    @functools.wraps(fn)
+    def wrapper(*args, **kwargs):
+
+        # Get user_id from the JWT token
+        staff_id = int(get_jwt_identity())
+
+        # SELECT * FROM users where user_id = jwt_user_id
+        stmt = db.select(Staff).filter_by(staff_id=staff_id)
+        staff = db.session.scalar(stmt)
+
+        # For edge case where old JWT token is used for a deleted account
+        if staff is None:
+            return {
+                "error": "The logged in staff member has been deleted. Please login again."
+            }, 403
+
+        # Run the decorated function if staff member is admin
+        if staff.is_admin:
+            return fn(*args, **kwargs)
+
+        # Else, return error that staff member is not an admin
+        else:
+            return {
+                "error": "Staff member does not have admin privilleges"
+            }, 403
+
+    return wrapper
+
+utils.py
+import functools
+
+from flask_jwt_extended import get_jwt_identity
+
+from init import db
+from models.staff import Staff
+
+def authorise_as_admin():
+    # get the user's id from get_jwt_identity
+    staff_id = get_jwt_identity()
+    # fetch the user from the db
+    stmt = db.select(Staff).filter_by(staff_id=staff_id)
+    staff = db.session.scalar(stmt)
+    # check whether the user is an admin or not
+    return staff.is_admin
+# change user to staff?
+def auth_as_admin_decorator(fn):
+    @functools.wraps(fn)
+    def wrapper(*args, **kwargs):
+        # get the user's id from get_jwt_identity
+        staff_id = get_jwt_identity()
+        # fetch the entire user using the id
+        stmt = db.select(Staff).filter_by(staff_id=staff_id)
+        staff = db.session.scalar(stmt)
+        # if user is an admin
+# change user to staff?
+        if staff.is_admin:
+            # allow the decorated function to execute
+            return fn(*args, **kwargs)
+        # else (user is not an admin)
+        else:
+            # return error
+            return {"error": "Only admin can perform this action"}, 403
+
+    return wrapper
+
+
+Have been repeatedly trying “flask db seed” in the terminal. It briefly started recording something:
+
+[SQL: INSERT INTO claimedbys (name, phone, email, address, date_claimed, item_id) SELECT p0::VARCHAR, p1::INTEGER, p2::VARCHAR, p3::VARCHAR, p4::DATE, p5::INTEGER FROM (VALUES (%(name__0)s, %(phone__0)s, %(email__0)s, %(address__0)s, %(date_claimed__0)s, % ... 164 characters truncated ... ) ORDER BY sen_counter RETURNING claimedbys.claimedby_id, claimedbys.claimedby_id AS claimedby_id__1]
+[parameters: {'item_id__0': None, 'address__0': '222 Bank St Sydney', 'name__0': 'Tim Johnson', 'phone__0': '0200010110', 'date_claimed__0': datetime.date(2024, 7, 19), 'email__0': 'tjohnson100@aol.com', 'item_id__1': None, 'address__1': '444 Smith St Mascot', 'name__1': 'Samantha Gold', 'phone__1': '0600050110', 'date_claimed__1': datetime.date(2024, 7, 19), 'email__1': 'sgold33@gmail.com'}]
+
+But with the error “sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column "item_id" of relation "claimedbys" does not exist” and since then, with other attempts at correction, has gone back to giving me some other nonsense like “sqlalchemy.exc.NoForeignKeysError: Can't find any foreign key relationships between ‘items' and 'items'.” Not sure how/why it’s saying that. And it seems like the database may not turn out as originally intended, in attempting to correct it, if I can fully correct everything.
+
+Project might be a lost cause. Tried reformatting some things, some terms, references but still getting the same nonsense error message: sqlalchemy.exc.InvalidRequestError: Mapper 'Mapper[Staff(staff)]' has no property 'enteredby'. If this property was indicated from other mappers or configure events, ensure registry.configure() has been called.
+
+Staff isn't supposed to have the property 'enteredby' but enteredby has staff_id ForeignKey
+
+
+__tablename__ = "staffs"
+staff_id = db.Column(db.Integer, primary_key=True)
+
+
+localhost:5432/lost_propertydb
+/auth
+/register
+/login
+
+Tables dropped
+Tables created
+Tables seeded
+
+ raise TypeError(f"Object of type {type(o).__name__} is not JSON serializable")
+TypeError: Object of type Staff is not JSON serializable
+
+
+    stmt = db.select(StaffProfile).order_by(StaffProfile.StaffName)
+    staffprofile = db.session.scalars(stmt)
+    return staffprofiles_schema.dump(staffprofile)
+
+ raise TypeError(f"Object of type {type(o).__name__} is not JSON serializable")
+TypeError: Object of type ClaimedBy is not JSON serializable
+
+python3 -m flask db drop && python3 -m flask db create && python3 -m flask db seed
+flask run
+
+ http://127.0.0.1:8080/claimedby
+
+   class Meta:fields =
+
+ChatGPT
+jsonpickle
+jsonify
+
+127.0.0.1 - - [23/Jul/2024 22:22:38] "GET /item/ HTTP/1.1" 200
+127.0.0.1 - - [23/Jul/2024 22:23:46] "GET /item/1 HTTP/1.1" 200
+
+127.0.0.1 - - [23/Jul/2024 22:35:12] "GET /staffprofile/ HTTP/1.1" 200
+127.0.0.1 - - [23/Jul/2024 22:36:01] "GET /staffprofile/1 HTTP/1.1" 200
+
+127.0.0.1 - - [23/Jul/2024 22:41:24] "GET /claimedby/1 HTTP/1.1" 200
+127.0.0.1 - - [23/Jul/2024 22:43:14] "GET /claimedby/ HTTP/1.1" 200
+
+127.0.0.1 - - [23/Jul/2024 22:44:12] "POST /claimedby/ HTTP/1.1" 422 -
+127.0.0.1 - - [23/Jul/2024 22:47:13] "POST /item/ HTTP/1.1" 422 -
+127.0.0.1 - - [23/Jul/2024 22:55:01] "PUT /auth/staff HTTP/1.1" 422 -
+
+422 unprocessable entity
+"msg": "Not enough segments"
+
+    claimedby = ClaimedBy.query.filter_by(id=claimedby_id).first()
+
+    # Check if object_data is None (object not found)
+    if claimedby is None:
+        return jsonify({'error': 'Object not found'}), 404
+
+    # Convert the SQLAlchemy object to a dictionary
+    claimedby_dict = {
+        'id': claimedby.id,
+        'name': claimedby.name,
+        'phone': claimedby.phone,
+        'address': claimedby.address,
+        'date_claimed': claimedby.date_claimed,
+        'item_id': claimedby.item_id,
+        'staff_id': claimedby.staff_id,
+    }
+
+    # Return the JSON response
+    return jsonify(claimedby_dict) 
+
+            "id",
+            "item_name",
+            "description",
+            "quantity",
+            "date_found",
+            "time_found",
+            "location_found",
+            "now_claimed",
+            "staffprofile_id",
+            "staff_id",
+            "claimedby" 
+
+127.0.0.1 - - [23/Jul/2024 22:22:38] "GET /item/ HTTP/1.1" 200 -
+127.0.0.1 - - [23/Jul/2024 22:23:46] "GET /item/1 HTTP/1.1" 200 - 
+
+
+#    item = Item.query.filter_by(id=item_id).first()
+
+    # Check if object_data is None (object not found)
+#    if item is None:
+#        return jsonify({'error': 'Object not found'}), 404
+
+    # Convert the SQLAlchemy object to a dictionary
+#    item_dict = {
+#        'id': item.id,
+#        'item_name': item.item_name,
+#        'description': item.description,
+#        'quantity': item.quantity,
+#        'date_found': item.date_found,
+#        'time_found': item.time_found,
+#        'location_found': item.location_found,
+#        'now_claimed': item.now_claimed,
+#        'staffprofile_id': item.staffprofile_id,
+#        'staff_id': item.staff_id,
+#    }
+
+    # Return the JSON response
+#    return jsonify(item_dict)     
+
+#    stmt = db.select(Item).filter_by(id=item_id)
+   
+#    item = db.session.scalar(stmt)
+#    if item:
+#        return item_schema.dump(item)
+#    else:
+#        return {"error": f"Item with id {item_id} not found"}, 404 
+
+    claimedbys = ClaimedBy.query.all()
+    # serialise users into JSON objects based on schema
+    result = claimedbys_schema.dump(claimedbys)
+    # return result as a response with successful status code
+    return jsonify({"claimedbys": result}), 200
+
+
+    claimedby = ClaimedBy.query.filter_by(id=claimedby_id).first()
+
+    # Check if object_data is None (object not found)
+    if claimedby is None:
+        return jsonify({'error': 'Object not found'}), 404
+
+    # Convert the SQLAlchemy object to a dictionary
+    claimedby_dict = {
+        'id': claimedby.id,
+        'name': claimedby.name,
+        'phone': claimedby.phone,
+        'address': claimedby.address,
+        'date_claimed': claimedby.date_claimed,
+        'item_id': claimedby.item_id,
+        'staff_id': claimedby.staff_id,
+    }
+
+    # Return the JSON response
+    return jsonify(claimedby_dict)         
+
+started some testing in Insomnia installed jsonify and jsonpickle in case needed due to a few error messages Get seems ok for staffprofile item claimedby
+
+ cli_controller
+
+
+                  "item",
+                  "staffprofile",
+                  "claimedby"
+
+@auth_bp.route("/register", methods=["POST"])
+def register_staff():
+    try:
+        body_data = StaffSchema.load(request.get_json())
+
+        staff = Staff(
+           organisation_name=body_data.get("organisation_name"),
+           staff_email=body_data.get("staff_email")
+        )
+ 
+        staff_password = body_data.get("staff_password")
+
+        if staff_password:
+            staff.staff_password = bcrypt.generate_password_hash(staff_password).decode("utf-8")
+
+        # add and commit to the DB
+        db.session.add(staff)
+        db.session.commit()
+        #staff_schema = jsonpickle.encode(staff)
+        # respond back
+        return staff_schema.dump(staff), 201
+    
+    except IntegrityError as err:
+        if err.orig.pgcode == errorcodes.NOT_NULL_VIOLATION:
+            return jsonify ({"error": f"The column {err.orig.diag.column_name} is required"}), 409
+        if err.orig.pgcode == errorcodes.UNIQUE_VIOLATION:
+            return jsonify ({"error": "Email address already in use"}), 409
+
+
+        item_name=body_data.get("item_name"),
+        description=body_data.get("description"),
+        quantity=body_data.get("quantity"),
+        date_found=date.today(),
+        time_found=body_data.get("time_found"),
+        location_found=body_data.get("location_found"),
+        now_claimed=body_data.get("now_claimed"),
+        staffprofile_id=get_jwt_identity(),         
+        staff_id=get_jwt_identity(),
+
+
+422 unprocessable entity
+"msg": "Not enough segments"
+           [a-zA-Z0-9_.-]+$
+
+
+"error": "400 Bad Request: Failed to decode JSON object: Expecting value: line 1 column 1 (char 0)"
+
+@auth_bp.route("/login", methods=["POST"])
+def login_staff():
+
+    # Get the data from the request body
+    body_data = request.get_json()
+    #body_data = StaffSchema.load(request.get_json())
+    #body_data = staff_schema.load(request.get_json())
+
+    # Find user with the email address
+    # SELECT * FROM users WHERE email = 'user_email_here';
+    stmt = db.select(Staff).filter_by(staff_email=body_data.get("staff_email"))
+    staff = db.session.scalar(stmt)
+
+    # If cannot find user account with email, return account not found error
+    if staff and bcrypt.check_password_hash(
+            staff.staff_password,
+            body_data.get('staff_password')
+            ):
+        # create JWT token for user with expiry set for 7 days
+        token = create_access_token(
+            identity=str(staff.staff_id),
+            expires_delta=timedelta(days=7)
+            )
+        # return user info with token as a JSON response
+        return jsonify(
+            {
+            "staff_email": staff.staff_email,
+            "token": token,
+            "is_admin": staff.is_admin
+            }
+        ), 200
+    # return an error and unauthorised status code
+    # in the case of invalid fields
+    else:
+        return jsonify(
+            {
+                "Error": "Username or password is invalid"
+            }
+        ), 401
+
+
+    # Get the data from the request body
+    body_data = request.get_json()
+    #body_data = StaffSchema.load(request.get_json())
+    #body_data = staff_schema.load(request.get_json())
+
+    # Find user with the email address
+    # SELECT * FROM users WHERE email = 'user_email_here';
+    stmt = db.select(Staff).filter_by(staff_email=body_data.get("staff_email"))
+    staff = db.session.scalar(stmt)
+
+    # If cannot find user account with email, return account not found error
+    if staff and bcrypt.check_password_hash(
+            staff.staff_password,
+            body_data.get('staff_password')
+            ):
+        # create JWT token for user with expiry set for 7 days
+        token = create_access_token(
+            identity=str(staff.staff_id),
+            expires_delta=timedelta(days=7)
+            )
+        # return user info with token as a JSON response
+        return jsonify(
+            {
+            "staff_email": staff.staff_email,
+            "token": token,
+            "is_admin": staff.is_admin
+            }
+        ), 200
+    # return an error and unauthorised status code
+    # in the case of invalid fields
+    else:
+        return jsonify(
+            {
+                "Error": "Username or password is invalid"
+            }
+        ), 401
+
+
+Since last night I have been testing and troubleshooting some more. At the moment, I only have Get working well, and Delete (mainly for claimedby if I disable @‌jwt_required() ) and Register_Staff working to some extent on Insomnia, the rest giving error messages such as:
+
+127.0.0.1 - - [26/Jul/2024 09:37:38] "POST /staffprofile/ HTTP/1.1" 422 -
+"msg": "Not enough segments"
+
+I’m not really sure what this is referring to. The bearer token? How to format that and where (tried variations for it)? How to put eg?:
+
+{
+"StaffName": "Jonny Smith",
+"role":"Manager",
+}
+
+Perhaps I’ll try StaffName in lowercase with underscores, in case that’s the difference.  I decided to add in get for Staff (auth), partly to help me see the ids and details for it. And login isn’t working still either, was trying variations/rearrangements for it, I think it was mainly: "error": "400 Bad Request: Failed to decode JSON object: Expecting value: line 1 column 1 (char 0)" and trying to figure out what this means and how to fix it.
+
+422 unprocessable entity
+msg: Not enough segments
+        StaffProfile(
+            staffprofile_id=6,
+            StaffName="Anna Fantasia",
+            role="Swim Teacher",
+            staff_id=6
+        ),
+
+@staffprofile_bp.route('/', methods=["POST"])
+@jwt_required() 
+def new_staffprofile():
+    body_data = staffprofile_schema.load(request.get_json())
+
+    staffprofile = StaffProfile(
+
+        StaffName = body_data.get("StaffName"),
+        role = body_data.get("role"),
+        staff_id=get_jwt_identity()
+    )
+
+    db.session.add(staffprofile)
+    db.session.commit()
+
+    return staffprofile_schema.dump(staffprofile), 201
+
+
+
+class StaffProfileSchema(ma.Schema):
+    #id = fields.Int()
+    #staffprofile_id = fields.Integer()
+
+sqlalchemy.exc.IntegrityError: (psycopg2.errors.ForeignKeyViolation) insert or update on table "staffprofiles" violates foreign key constraint "staffprofiles_staff_id_fkey"
+DETAIL:  Key (staff_id)=(6) is not present in table "staffs".
+
+
+token = create_access_token(identity=str(staff.staff_id), expires_delta=timedelta(days=7))
+
+127.0.0.1 - - [26/Jul/2024 03:01:16] "GET /auth/ HTTP/1.1" 200 -
+127.0.0.1 - - [26/Jul/2024 03:01:37] "GET /auth/staff/1 HTTP/1.1" 200 -
+127.0.0.1 - - [26/Jul/2024 04:20:36] "DELETE /claimedby/4 HTTP/1.1" 200 -
+"message": "Claimedby 'Martina Wong' deleted successfully"
+#@jwt_required()
+127.0.0.1 - - [26/Jul/2024 05:02:41] "DELETE /claimedby/5 HTTP/1.1" 200 -
+127.0.0.1 - - [26/Jul/2024 03:02:10] "POST /auth/register HTTP/1.1" 500 -
+"error": "400 Bad Request: Failed to decode JSON object: Expecting value: line 1 column 1 (char 0)"
+
+        Staff(
+            organisation_name="Nicks Gym",
+            staff_email="admin@email.com",
+            staff_password=bcrypt.generate_password_hash("123456").decode("utf-8"),
+            is_admin=True,
+        ),
+
+    # Check if request body is valid JSON
+    if not body_data:
+        return jsonify({"Error": "Invalid JSON format in request body"}), 400
+
+    #tried adding staff_id = body_data.get("staff_id")
+    #staff_email = body_data.get("staff_email")
+    #staff_password = body_data.get("staff_password")
+    
+    #if not staff_email or not staff_password:
+    #    return jsonify({"Error": "Missing required fields"}), 400
+
+
+curl -X POST http://127.0.0.1:8080/auth/register \
+     -H "Content-Type: application/json" \
+     -d '{"staff_email": "admin@email.com", "password": "123456"}'
+
+def register_staff():
+    try:
+        # get the data from the body of the request
+        body_data = staff_schema.load(request.get_json())
+        #partial=true
+        # create an instance of the Staff model
+        staff = Staff(
+           organisation_name=body_data.get("organisation_name"),
+           staff_email=body_data.get("staff_email")
+        )
+        # extract the password from the body
+        password = body_data.get("password")
+
+        # hash the password
+        if password:
+            staff.password = bcrypt.generate_password_hash(password).decode("utf-8")
+
+        # add and commit to the DB
+        db.session.add(staff)
+        db.session.commit()
+        #staff_schema = jsonpickle.encode(staff)
+        # respond back
+        return staff_schema.dump(staff), 201
+    
+    except ValidationError as ve:
+        # Handle Marshmallow validation errors
+        return {"error": ve.messages}, 400
+        
+    except IntegrityError as err:
+        if err.orig.pgcode == errorcodes.NOT_NULL_VIOLATION:
+            return jsonify ({"error": f"The column {err.orig.diag.column_name} is required"}), 409
+        if err.orig.pgcode == errorcodes.UNIQUE_VIOLATION:
+            return jsonify ({"error": "Email address is already in use"}), 409
+    except Exception as e:
+        # Handle any other unexpected errors
+        return {"error": str(e)}, 500
+
+
+{
+	"staff_id": 8,
+	"organisation_name": "NicksGym",
+	"staff_email": "admin2@email.com",
+	"staff_password": "$2b$12$3NluAdFqweGf/NWUGMdWOuDgV087cevkB0P/qNItF2.O8Le14soSa",
+	"is_admin": false
+}
+
+{
+	"staff_id": 11,
+	"organisation_name": "Jonnys Gym",
+	"staff_email": "jonnys001@gmail.com",
+	"staff_password": "$2b$12$sQwkDCgP4BvV4oPQeBNaJutwh3vQolqKp.U/aqyUNal93i79Ic2f2",
+	"is_admin": false
+}
+
+127.0.0.1 - - [26/Jul/2024 09:37:38] "POST /staffprofile/ HTTP/1.1" 422 -
+"msg": "Not enough segments"
+
+{
+	"staffprofile_id":8,
+	"StaffName": "Jonny Smith",
+	"role":"Manager",
+	"staff_id": 11
+}
+
+{
+	"StaffName": "Jonny Smith",
+	"role":"Manager",
+}
+http://127.0.0.1:8080/staffprofile?StaffName=JonnySmith&role=Manager&staff_id=11
+
+Authorization: Bearer
+
+
+{
+	"staff_name": "JonnySmith",
+	"role":"Manager"
+}
+
+"msg": "Not enough segments"
+
+
+127.0.0.1 - - [26/Jul/2024 23:35:36] "POST /staffprofile?staff_name=Jonny%20Smith&role=Manager HTTP/1.1" 308 -
+127.0.0.1 - - [26/Jul/2024 23:35:36] "POST /staffprofile/?staff_name=Jonny%20Smith&role=Manager HTTP/1.1" 422 -
+
+$2b$12$ieNgmchHNi5lMu5l8t9NUO0uUMhI4v5vCyjy4DnAMbLWzkEyhhZYu
+
+{
+	"staff_email": "jonnys222@gmail.com",
+	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcyMjAwNDIyMywianRpIjoiOTEyNGRmNzYtMGUxYy00NDlhLTg5ZDMtZWU3Yjg2NDgzMjQ4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjciLCJuYmYiOjE3MjIwMDQyMjMsImNzcmYiOiJhNWZlODQ4OC1hNjM5LTQzMjItOGFlMy1hOWMyY2E2ZjlmOWUiLCJleHAiOjE3MjIyNjM0MjN9.gVHNuWStDMPmQmUS8_wCgNg6iV6cM_VGfjQdXkj9qdo",
+	"is_admin": false
+}
+
+	{
+		"staff_id": 7,
+		"organisation_name": "Jonnys Gym",
+		"staff_email": "jonnys222@gmail.com",
+		"is_admin": false
+	}
+
+	"staffprofile_id": 7,
+	"staff_name": "Jonny Jnr",
+	"role": "Co Manager",
+	"staff_id": 7
+
+	{
+            "item_name":"wallet",
+            "description":"brown leather",
+            "quantity":"1",
+            "date_found": "",
+            "time_found": "1PM",
+            "location_found":"under bag rack",
+            "now_claimed":"No",
+            "staffprofile_id":7,
+            "staff_id":7
+	}
+
+	"id": 7,
+	"item_name": "wallet",
+	"description": "brown leather",
+	"quantity": 1,
+	"date_found": "2024-07-27",
+	"time_found": "1PM",
+	"location_found": "under bag rack",
+	"now_claimed": "No",
+	"staffprofile_id": 7,
+	"staff_id": 7
+
+{
+	"staff_id": 8,
+	"organisation_name": "Cove High School",
+	"staff_email": "BSmith@CHS.com",
+	"staff_password": "$2b$12$mPwYpu6mSUOxotDkY8iL9u4pN.I3Z92eftxyew1v3UMy4vANTHYpW",
+	"is_admin": false
+}
+
+{
+	"staff_email": "BSmith@CHS.com",
+	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcyMjAwNzc0MCwianRpIjoiMGNhMDA2MWEtYTk1Yi00NDQ0LWI5MmMtZTJkOTQ1MTk3OTc4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjgiLCJuYmYiOjE3MjIwMDc3NDAsImNzcmYiOiJjNzk4MTA4My1iODcwLTRmMTMtYjQ1OS0wZDNjMzIyZTU1ZmIiLCJleHAiOjE3MjIyNjY5NDB9.sGwFHS3Zyi78fSBbGjgPAFbFKZmVo_p04nX7jEsxb-A",
+	"is_admin": false
+}
+
+{
+	"staffprofile_id": 7,
+	"staff_name": "Belinda Smith",
+	"role": "PE Teacher",
+	"staff_id": 7
+}
+
+
+login and other methods and routes working more properly now
+python3 -m venv src/.venv
+
+
+{
+	"staff_id": 7,
+	"organisation_name": null,
+	"staff_email": "BSmith@CHS.com",
+	"staff_password": "$2b$12$EvCJWU.vliDirleH1/GVh.r7VuLf4izCjWkB4vCMwW2t41pJMlQvS",
+	"is_admin": false
+}
+
+
+{
+	"staff_id": 8,
+	"organisation_name": "Cove High School",
+	"staff_email": "BSmith2@CHS.com",
+	"staff_password": "$2b$12$6Mtz3z4ZpNPXu8xjyNLLuOUldbdBeZ/aPYKNkaXm0uiifhGGX3nKe",
+	"is_admin": false
+}
+{
+	"staff_email": "BSmith2@CHS.com",
+	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcyMjA4Mzg1MywianRpIjoiODk0MTkwYTItOWM4NS00YmRkLTk3NWEtY2NjOWI1NDYxNTk3IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjgiLCJuYmYiOjE3MjIwODM4NTMsImNzcmYiOiI2ZjBkYmVkYi0yODI2LTQyZWQtYTIyNi00NGQ2YzMzMjJhNGMiLCJleHAiOjE3MjIzNDMwNTN9.XPpf21eWNiMrkq9uiQOMR41joh9YahRCFbJXWmdwf7c",
+	"is_admin": false
+}
+
+hyphens - are allowed in staff names
+{
+	"staffprofile_id": 8,
+	"staff_name": "Belinda Smith-Henley",
+	"role": "Year 8 Director",
+	"staff_id": 8
+}
+
+{
+	"id": 7,
+	"item_name": "hair clips",
+	"description": "silver and blue",
+	"quantity": 3,
+	"date_found": "2024-07-27",
+	"time_found": "6PM",
+	"location_found": "women's locker room sink",
+	"now_claimed": "No",
+	"staffprofile_id": 8,
+	"staff_id": 8
+}
+
+		"id": 7,
+		"item_name": "hair clips",
+		"description": "silver blue and black",
+		"quantity": 3,
+		"date_found": "2024-07-27",
+		"time_found": "6PM",
+		"location_found": "girls locker room sink",
+		"now_claimed": "No",
+		"staffprofile_id": 8,
+		"staff_id": 8
+
+	"id": 8,
+	"item_name": "glasses",
+	"description": "black round-framed",
+	"quantity": 1,
+	"date_found": "2024-07-27",
+	"time_found": "5PM",
+	"location_found": "science room 2",
+	"now_claimed": "No",
+	"staffprofile_id": 8,
+	"staff_id": 8
+
+	"id": 13,
+	"name": "Jane Candy",
+	"phone": 6748460,
+	"email": "jcandy727@yahoo.com",
+	"address": "1800 Termite Tce Greenacres",
+	"date_claimed": "2024-07-27",
+	"item_id": 8,
+	"staff_id": 8
+}
+
+Testing of the API/database seems to be mostly ok at moment, the only noticeable problems were with "phone = fields.Integer(..." for claimedby and "authorise_as_admin()" or "auth_as_admin_decorator(fn)" not working well in auth_controller so I commented these out for update_staff and delete_staff.
+Eg. for update_staff, it was:
+127.0.0.1 - - [28/Jul/2024 03:05:53] "PUT /auth/staff/7 HTTP/1.1" 500
+
+And "phone = fields.Integer(..."
+stopped working properly for some reason, 27-7-2024 11pm approx. Kept getting "TypeError: object of type 'int' has no len()" Eg:
+127.0.0.1 - - [27/Jul/2024 23:53:42] "POST /claimedby/ HTTP/1.1" 201 
+It worked better again if I disabled/commented out "phone = fields.Integer(..."
+
+I tried for a while to sort this out eg. if indentation issue or other formatting
+If I try to remove "" for eg. phone="0200010110" in cli_controller, terminal gives me "SyntaxError: leading zeros in decimal integer literals are not permitted; use an 0o prefix for octal integers"
+Phone numbers/Integers seem to be only accepted without zeros in front in Insomnia
+
+I probably have to leave these and get on with documentation.
+
+Admittedly, I'm not entirely familiar with using Trello still, but I decided to comment/sort-of blog as I was progressing through the project, eg. some challenges/problems to solve. When doing these projects I often use a notepad/txt file to write out certain things, bits of code to use/try out, reminders, etc.
+
+
+And authorise_as_admin() wasn't working well in auth_controller. So I commented these out.
+
+	"id": 14,
+	"name": "Pat Ahern",
+	"phone": 99088774,
+	"email": "patA555@yahoo.com",
+	"address": "1899 Jones Tce Redwood",
+	"date_claimed": "2024-07-28",
+	"item_id": 8,
+	"staff_id": 8
+
+
+	"staffprofile_id": 8,
+	"staff_name": "Belinda Smith-Henley",
+	"role": "Year 7 Director",
+	"staff_id": 8
+
+
+{
+	"staff_email": "admin@email.com",
+	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcyMjA5OTUzNCwianRpIjoiNmM4Y2JkZTMtOGU1MC00ZmU1LTlmYjktYzZjZjU0NTJmY2E1IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE3MjIwOTk1MzQsImNzcmYiOiJkZTU4MTEyOC0zODQ1LTRhYmQtOGEwMy02MWZkNTBmOTg0ZDIiLCJleHAiOjE3MjIzNTg3MzR9.3uoPEXXH0bNVMG7fEUZuLhtJ9k7kr0S70coLu-7c4FE",
+	"is_admin": true
+}
+
+{
+	"staff_email": "BSmith2@CHS.com",
+	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcyMjEwMzA1NCwianRpIjoiMWRhZmJjMjQtOTBhOS00OTNhLWI4ZDQtMmM4NzRmOTk2YjczIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjgiLCJuYmYiOjE3MjIxMDMwNTQsImNzcmYiOiI3ZGM3ZTQ5Yy04ZDY0LTRiOTYtYmFjMy01MDI3MDdkZDdmMDUiLCJleHAiOjE3MjIzNjIyNTR9.nNX_VgjzoIKvdjqWfDj7Qu0XnCPwilzV9XzawmM5Ov8",
+	"is_admin": false
+}
+
+{
+	"staff_id": 9,
+	"organisation_name": "Test Org",
+	"staff_email": "testorg@test.com",
+	"staff_password": "$2b$12$./0rsaCH/dtCxo0bjVc3/.HWRj5.kNbTlm1eZSNvTVvc/Lfpely3W",
+	"is_admin": false
+}
+
+
+{
+	"staff_email": "testorg@test.com",
+	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcyMjEwNDQyMCwianRpIjoiOGM3ZDhjYjQtMGVhMS00NDA5LWI2OGMtZjZhMDE1MTUzZTU2IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjkiLCJuYmYiOjE3MjIxMDQ0MjAsImNzcmYiOiI2YjZhZTE0ZS1jNzVjLTQ0MWEtODVkOC02ZjQ0MGE3MDYzYmEiLCJleHAiOjE3MjIzNjM2MjB9.E38wVzGverM1frkdplEDtPkY0j9jj_SE5Zw15uTyRc8",
+	"is_admin": false
+}
