@@ -1,9 +1,12 @@
 # T2A2_Lost_property_API
 
+[Github Repository](https://github.com/RobertBail/T2A2_Lost_property_API)
+[Trello Board](https://trello.com/b/ZxhUNEZr/lost-property-api)
+
 ## How to Set Up
 
-python3 -m flask db drop && python3 -m flask db create && python3 -m flask db seed
-flask run
+- python3 -m flask db drop && python3 -m flask db create && python3 -m flask db seed
+- flask run
 ## Purpose and Aim
 
 ## How tasks are allocated and tracked
