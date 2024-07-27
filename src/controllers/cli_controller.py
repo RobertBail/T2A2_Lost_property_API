@@ -7,7 +7,7 @@ from datetime import date
 # Get current time in the specified timezone
 #current_time = datetime.now(local_timezone)
 # For working with timezones (optional but recommended)
-#I was seeing if there is a way to record or set the user/staff member's current time of entry, according to their timezone
+#I was seeing if there is a way to record or set the user/staff member's current time of entry, according to their timezone. For the time being, they'll enter time manually.
 
 from flask import Blueprint
 
