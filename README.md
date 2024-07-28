@@ -103,7 +103,7 @@ SQLAlchemy is an open-source Python library that provides a SQL toolkit and Obje
 ### Flask JWT Extended
 JWT Extended is an extension for flask that adds support for JSON Web Tokens (JWT). This allows for secure and convenient authentication mechanisms and can be used to protect routes and endpoints. JWT Extended is used in this app to create web access tokens, and check these tokens for identification and authorisation, which will make the app's routes secure.
 
-Statements such as "@jwt_required()" in this app's code will authorise logged-in staff to input and edit certain lost property details, such as for each item and "ClaimedBy", along with their own staff details.
+Statements such as "@jwt_required()" in this app's code will authorise logged-in staff to input and edit certain lost property details, such as for each item and "ClaimedBy", along with their own staffprofile details.
 
 ### Bcrypt
 Bcrypt is a password hashing library which assists with the safe storage of passwords. The Bcrypt algorithm is designed to be resistant to brute-force search attacks and is a major component for building secure flask applications. In this application, Bcrypt is used to hash staff passwords so they are not stored in plain text, which improves staff/user security, as in this mock-up example in the cli_controller file:
