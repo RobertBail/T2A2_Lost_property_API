@@ -59,6 +59,7 @@ Staff of these organisations can register and log into this database, and provid
 Staff can also enter details of who has claimed the item, when that occurs. These are referred to as "Claimed By" details, to inform staff of who has collected the item and when. The Claimed By details could be helpful in case of mix-ups or even theft by customers or staff who collect items. The Claimed By details include the claimer/owner's name, phone number, email address, physical address, and the date claimed will be recorded automatically.
 
 Reference:
+
 Coleman, A 2023, "How Solving The Age-Old Lost And Found Dilemma Enhances Customer Experience" Forbes, accessed 28 July 2024, https://www.forbes.com/sites/alisoncoleman/2023/04/25/how-solving-the-age-old-lost-and-found-dilemma-enhances-customer-experience/
 
 ## How tasks are allocated and tracked
