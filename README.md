@@ -213,7 +213,11 @@ Early on, when I created the draft ERD, I had the idea of tables for Staff, Foun
 ### The updated ERD during completion/development of app
 ![Updated ERD](./docs/UpdatedERD.png)
 
-Normalisation is a technique for database design which is used to organise tables in a way that reduces redundancy and dependency of data (North & Xu 2021). The main objective of normalisation is that a table is about a specific topic and only supporting topics are included, which minimizes duplicate data, avoids data modification issues, and simplifies queries (North & Xu 2021). I did aim to follow this logic with the Lost Property database, such as having the Staff table related to register/login purposes, the StaffProfile table for a few staff personal details, the Items table for the item details, and ClaimedBy to indicate who has claimed it and when. Early on, I thought of putting date_found and time_found in the "Found_By" table, but later thought these were more appropriate under Item details, and having EnteredBy/StaffProfile for more staff personal details.
+Normalisation is a technique for database design which is used to organise tables in a way that reduces redundancy and dependency of data (North & Xu 2021). The main objective of normalisation is that a table is about a specific topic and only supporting topics are included, which minimizes duplicate data, avoids data modification issues, and simplifies queries (North & Xu 2021). I did aim to follow this logic with the Lost Property database, such as having the Staff table related to register/login purposes, the StaffProfile table for a few staff personal details, the Items table for the item details, and ClaimedBy to indicate who has claimed it and when. Early on, I thought of putting date_found and time_found in the "Found_By" table, but later thought these were more appropriate under Item details, and having EnteredBy/StaffProfile for more staff personal details. For a while I was wondering if there were any other attributes to add in StaffProfile, but couldn't think of anything else necessary or useful.
+
+Implementing "unique=True" for attributes such as staff_email in Staff and email in ClaimedBy could assist with minimizing duplicate data, and help data integrity, ie. this data belonging only to that logged-in staff member. I also tried to use mostly unique attribute names in each model/table, ie. attribute names relevant to respective models/tables, also to avoid confusion and "Don't Repeat Yourself", such as "staff_name" under StaffProfile, "item_name" under Item, and "name" under ClaimedBy for the claimer's name, along with their contact details. However, I thought it would be helpful to record the date, ie. date_found and date_claimed in Item and ClaimedBy respectively, because it might useful for the item's owner to know "yes that would be mine", when approximately they left the item, and then to inform staff or customers when the item has been claimed, eg. if the owner needs to come and collect it later. I kept time, ie. time_found, only to Item.
+ 
+Implementing "nullable=False" for some attributes, particularly in the Staff and StaffProfile tables, could also help prevent insertion anomalies, which can be a problem in non-normalized databases, the Staff table also being more vital for login/auth purposes.
 
 References: 
 North, S & Xu, X 2021 "Introduction to Database Systems, 2nd Edition", Kennesaw State University, accessed 28 July 2024, https://alg.manifoldapp.org/read/introduction-to-database-systems/section/039a1438-ece4-4917-9596-254de7d52fd6#:~:text=Normalization%20is%20a%20technique%20in,all%20by%20using%20entity%20relationships.
@@ -221,66 +225,68 @@ North, S & Xu, X 2021 "Introduction to Database Systems, 2nd Edition", Kennesaw 
 
 ## The implemented models and their relationships
 
+This is how the models and their relationships were finally implemented, such as as I began to understand a bit more how they should be arranged, what to ultimately include and connect. And I kept in mind what staff/users and organisations would want from this app, and knowing the problem of lost property personally, having experienced it occasionally.
+
 ### Staff
 #### Tablename: staffs
 #### Attributes
-staff_id - an Integer, primary key (I probably should have put unique for this but forgot)
-organisation_name - a String which refers to the name of the organisation using this app
-staff_email - a String, a unique email address for each staff user, and not nullable
-staff_password - a String, a password for staff to access this app
-is_admin - Boolean, an admin status check upon authorisation, if the staff member/user is allocated as an admin, which might be relevant for managerial staff/users of this app
+* staff_id - an Integer, primary key (I probably should have put unique for this but forgot)
+* organisation_name - a String which refers to the name of the organisation using this app
+* staff_email - a String, a unique email address for each staff user, and not nullable
+* staff_password - a String, a password for staff to access this app
+* is_admin - Boolean, an admin status check upon authorisation, if the staff member/user is allocated as an admin, which might be relevant for managerial staff/users of this app
 
 #### Associations
-staffprofile - one to many
-item - one to many
-claimedby - one to many
+* staffprofile - one to many
+* item - one to many
+* claimedby - one to many
 
 ### StaffProfile
 #### Tablename: staffprofiles
-staffprofile_id - an Integer, primary key
-staff_name - a String for the staff member's name, which is not nullable
-role - a String for the staff member's role or occupation in the organisation
+* staffprofile_id - an Integer, primary key
+* staff_name - a String for the staff member's name, which is not nullable
+* role - a String for the staff member's role or occupation in the organisation
 
-staff_id - an Integer, Foreign Key, ID of the staff/user entering their details into the StaffProfile fields, not nullable
+* staff_id - an Integer, Foreign Key, ID of the staff/user entering their details into the StaffProfile fields, not nullable
 
 #### Associations
-staff - one to one
-item - one to one
+* staff - one to one
+* item - one to one
 
 ### Item
 #### Tablename: items
-id - an Integer, primary key
-item_name - a String which refers to the name of an item such as ""Adidas T Shirt"
-description - a String for a brief description of the item, such as "black and white large"
-quantity - an Integer to indicate how many have been found of this item/s
-date_found - this will record the current date when a new item is entered, such as "2024-07-27"
-time_found - a String, which will be entered manually by staff. I looked into if there is a way to record or set the user/staff member's current time of entry, according to their timezone. For the time being, they'll enter time manually.
-location_found - a String to indicate where the item was found , such as "locker room under bench"
-now_claimed - a String, but staff/users can only enter VALID_STATUSES "Yes" or "No"
+* id - an Integer, primary key
+* item_name - a String which refers to the name of an item such as ""Adidas T Shirt"
+* description - a String for a brief description of the item, such as "black and white large"
+* quantity - an Integer to indicate how many have been found of this item/s
+* date_found - this will record the current date when a new item is entered, such as "2024-07-27"
+* time_found - a String, which will be entered manually by staff. I looked into if there is a way to record or set the user/staff member's current time of entry, according to their timezone. For the time being, they'll enter time manually.
+* location_found - a String to indicate where the item was found , such as "locker room under bench"
+* now_claimed - a String, but staff/users can only enter VALID_STATUSES "Yes" or "No"
 
-staffprofile_id - an Integer, Foreign Key, ID of the staff profile entering details into Items, not nullable
-staff_id - an Integer, Foreign Key, ID of the staff/user entering details into Items, not nullable
+* staffprofile_id - an Integer, Foreign Key, ID of the staff profile entering details into Items, not nullable
+* staff_id - an Integer, Foreign Key, ID of the staff/user entering details into Items, not nullable
 
 #### Associations
-staffprofile - many to one
-staff - many to one
-claimedby - one to one
+* staffprofile - many to one
+* staff - many to one
+* claimedby - one to one
 
 ### ClaimedBy
 #### Tablename: claimedbys
-id - an Integer, primary key  = db.Column(db.Integer, primary_key=True)
-name - a String for entering the name of the claimer
-phone - an Integer for the phone number of the claimer
-email - a String for the claimer's email address, which must be unique
-address - a String for the physical/home address of the claimer
-date_claimed - this will record the current date when a new claimedby is entered, such as "2024-07-28"
+* id - an Integer, primary key  = db.Column(db.Integer, primary_key=True)
+* name - a String for entering the name of the claimer
+* phone - an Integer for the phone number of the claimer
+* email - a String for the claimer's email address, which must be unique
+* address - a String for the physical/home address of the claimer
+* date_claimed - this will record the current date when a new claimedby is entered, such as "2024-07-28"
 
-item_id - an Integer, Foreign Key, ID of the item being claimed
-staff_id - an Integer, Foreign Key, ID of the staff/user entering details into ClaimedBy
+* item_id - an Integer, Foreign Key, ID of the item being claimed
+* staff_id - an Integer, Foreign Key, ID of the staff/user entering details into ClaimedBy
 
 #### Associations
-item - many to one
-staff - many to one
+* item - many to one
+* staff - many to one
 
 
 ## Examples of how to use the API endpoints for the Lost Property API
@@ -299,26 +305,32 @@ For admin login:
 ![auth login3](./docs/API_images/authlogin_admin.png)
 
 #### GET
-To get all staff/auth details:
+To get all auth/staff details:
 /auth/
 ![auth getall1](./docs/API_images/getall_authstaff.png)
 ![auth getall2](./docs/API_images/getall_authstaff2.png)
 
-To get one staff/auth details:
+To get one auth/staff details:
 /auth/staff/<int:staff_id>
 ![auth getone1](./docs/API_images/getone_authstaff.png)
 
 #### PUT, PATCH
-To update staff/auth details:
+To update auth/staff details:
 /auth/staff/<int:staff_id>
 ![auth update1](./docs/API_images/authstaff_update.png)
 ![auth update2](./docs/API_images/authstaff_update2.png)
 ![auth update3](./docs/API_images/authstaff_update3.png)
 
+Only admin (logged in as admin) can update auth/staff details, including these of other staff in the organisation:
+![auth update4](./docs/API_images/onlyadmin_updatestaff.png)
+
 #### DELETE
 To delete staff/auth details:
 /auth/staff/<int:staff_id>
 ![auth delete1](./docs/API_images/authstaff_delete.png)
+
+Only admin (logged in as admin) can delete auth/staff details, including these of other staff in the organisation:
+![auth delete2](./docs/API_images/onlyadmin_deletestaff.png)
 
 ### StaffProfile
 #### GET
@@ -382,9 +394,12 @@ To delete item details:
 #### GET
 To get all claimedbys:
 /claimedby/
+![claimedby getall1](./docs/API_images/getall_claimedby.png)
+![claimedby getall2](./docs/API_images/getall_claimedby2.png)
 
 To get one claimedby:
 /claimedby/<int:claimedby_id>
+![claimedby getone](./docs/API_images/getone_claimedby.png)
 
 #### POST
 To enter new claimedby:
@@ -394,9 +409,11 @@ To enter new claimedby:
 #### PUT, PATCH
 To update claimedby:
 /claimedby/<int:claimedby_id>
+![claimedby update1](./docs/API_images/update_claimedby.png)
+![claimedby update2](./docs/API_images/update_claimedby2.png)
 
 #### DELETE
 To delete claimedby:
 /claimedby/<int:claimedby_id>
-
+![claimedby delete](./docs/API_images/delete_claimedby2.png)
 
