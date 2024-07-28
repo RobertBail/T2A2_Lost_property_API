@@ -139,6 +139,7 @@ This system didn't seem to accept numbers, such as phone numbers, beginning with
 Other disadvantages of Postgres include a comparatively low reading speed and not being available on all hosts by default (IONOS 2022).
 
 Reference:
+
 IONOS 2022, "PostgreSQL: a closer look at the object-relational database management system", IONOS, accessed 28 July 2024, https://www.ionos.com/digitalguide/server/know-how/postgresql/
 
 
@@ -222,7 +223,9 @@ Implementing "nullable=False" for some attributes, particularly in the Staff and
 DETAIL:  Key (staff_id)=(6) is not present in table "staffs".” So from my understanding, these anomalies are mostly cleared up now, for the app to function well, as indicated in Insomnia.
 
 References:
+
 Date, C. J. 1999. "An Introduction to Database Systems." Addison-Wesley Longman.
+
 North, S & Xu, X 2021 "Introduction to Database Systems, 2nd Edition", Kennesaw State University, accessed 28 July 2024, https://alg.manifoldapp.org/read/introduction-to-database-systems/section/039a1438-ece4-4917-9596-254de7d52fd6#:~:text=Normalization%20is%20a%20technique%20in,all%20by%20using%20entity%20relationships.
 
 
