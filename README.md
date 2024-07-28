@@ -202,6 +202,7 @@ body_data = item_schema.load(request.get_json())
 ## The entity relationship diagram (ERD) for this app’s database
 ### An early draft version of the ERD
 ![Early ERD](./docs/earlydraftERD.png)
+
 Early on, when I created the draft ERD, I had the idea of tables for Staff, Found_By, Item, and Claimed_By. Not long after, I changed Found_By into EnteredBy and then finally StaffProfile, which is more of a proper name for it.
 
 - Staff would be the beginning table, which facilitates register and login of staff members. This also enables the entry of the "organisation_name" into the database, whichever organisation could be using the Lost Property API.
