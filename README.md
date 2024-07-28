@@ -114,6 +114,7 @@ staff_password=bcrypt.generate_password_hash("123456").decode("utf-8"),
 Psycopg is a popular PostgreSQL database adapter for the Python programming language. Its extensions allow access to many of the features offered by PostgreSQL (Varrazzo 2024). Psycopg2 allows the connection to a postgreSQL database to execute SQL queries, fetch data, and perform database operations.
 
 References:
+
 Loria, S 2024 "Examples", Marshmallow, accessed 28 July 2024, https://marshmallow.readthedocs.io/en/stable/examples.html
 
 Loria, S 2024 "marshmallow: simplified object serialization" Marshmallow, accessed 28 July 2024, https://marshmallow.readthedocs.io/en/stable/
