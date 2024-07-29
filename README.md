@@ -5,7 +5,7 @@
 [Trello Board](https://trello.com/b/ZxhUNEZr/lost-property-api)
 
 Style Guide Reference:
-van Rossum, G, Warsaw, B, Coghlan, A 2013, "PEP 8 – Style Guide for Python Code", Python, accessed 4 May, 2024, https://peps.python.org/pep-0008/
+van Rossum, G, Warsaw, B, Coghlan, A 2013, "PEP 8 – Style Guide for Python Code", Python, accessed 28 July, 2024, https://peps.python.org/pep-0008/
 
 ## How to Set Up
 
